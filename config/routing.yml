@@ -1,0 +1,51 @@
+_profiler_home:
+    pattern: _profiler/
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:homeAction }
+
+_profiler_search:
+    pattern: _profiler/search
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:searchAction }
+
+_profiler_search_bar:
+    pattern: _profiler/search_bar
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:searchBarAction }
+
+_profiler_purge:
+    pattern: _profiler/purge
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:purgeAction }
+
+_profiler_info:
+    pattern: _profiler/info/{about}
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:infoAction }
+
+_profiler_import:
+    pattern: _profiler/import
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:importAction }
+
+_profiler_export:
+    pattern: _profiler/export/{token}.txt
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:exportAction }
+
+_profiler_phpinfo:
+    pattern: _profiler/phpinfo
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:phpinfoAction }
+
+_profiler_search_results:
+    pattern: _profiler/{token}/search/results
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:searchResultsAction }
+
+_profiler:
+    pattern: _profiler/{token}
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:panelAction }
+
+_profiler_router:
+    pattern: _profiler/{token}/router
+    defaults: { _controller: nicofuma.webprofiler.controller.router:panelAction }
+
+_profiler_exception:
+    pattern: _profiler/{token}/exception
+    defaults: { _controller: nicofuma.webprofiler.controller.exception:showAction }
+
+_profiler_exception_css:
+    pattern: _profiler/{token}/exception.css
+    defaults: { _controller: nicofuma.webprofiler.controller.exception:cssAction }

@@ -1,0 +1,22 @@
+imports:
+    - { resource: profiler.yml }
+
+services:
+    nicofuma.webprofiler.event.autoloader_listener:
+        class: nicofuma\webprofiler\event\autoloader_listener
+        tags:
+            - { name: event.listener }
+
+    nicofuma.webprofiler.controller.profiler:
+        class: nicofuma\webprofiler\controller\profiler
+        arguments:
+            - @template
+            - @controller.helper
+            - @?profiler
+
+    nicofuma.webprofiler.controller.router:
+        class: nicofuma\webprofiler\controller\router
+        arguments:
+            - @template
+            - @controller.helper
+            - @?profiler

@@ -1,0 +1,95 @@
+{% extends '@nicofuma_webprofiler/profiler/layout.html' %}
+
+{% block panel %}
+    <h2>Project Configuration</h2>
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            {% if collector.applicationname %}
+                <th>Application</th>
+                <td>{{ collector.applicationname }} {{ collector.applicationversion }} (on Symfony {{ collector.symfonyversion }})</td>
+            {% else %}
+                <th>Symfony version</th>
+                <td>{{ collector.symfonyversion }}</td>
+            {% endif %}
+        </tr>
+        {% if 'n/a' != collector.appname %}
+            <tr>
+                <th>Application name</th>
+                <td>{{ collector.appname }}</td>
+            </tr>
+        {% endif %}
+        {% if 'n/a' != collector.env %}
+            <tr>
+                <th>Environment</th>
+                <td>{{ collector.env }}</td>
+            </tr>
+        {% endif %}
+        {% if 'n/a' != collector.debug %}
+            <tr>
+                <th>Debug</th>
+                <td>{{ collector.debug ? 'enabled' : 'disabled' }}</td>
+            </tr>
+        {% endif %}
+    </table>
+
+    <h2>PHP configuration</h2>
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <th>PHP version</th>
+            <td>{{ collector.phpversion }}</td>
+        </tr>
+        <tr>
+            <th>Xdebug</th>
+            <td>{{ collector.hasxdebug ? 'enabled' : 'disabled' }}</td>
+        </tr>
+        <tr>
+            <th>PHP acceleration</th>
+            <td>{{ collector.hasaccelerator ? 'enabled' : 'disabled' }}</td>
+        </tr>
+        <tr>
+            <th>XCache</th>
+            <td>{{ collector.hasxcache ? 'enabled' : 'disabled' }}</td>
+        </tr>
+        <tr>
+            <th>APC</th>
+            <td>{{ collector.hasapc ? 'enabled' : 'disabled' }}</td>
+        </tr>
+        <tr>
+            <th>Zend OPcache</th>
+            <td>{{ collector.haszendopcache ? 'enabled' : 'disabled' }}</td>
+        </tr>
+        <tr>
+            <th>EAccelerator</th>
+            <td>{{ collector.haseaccelerator ? 'enabled' : 'disabled' }}</td>
+        </tr>
+        <tr>
+            <th>Full PHP configuration</th>
+            <td><a href="{#{{ path('_profiler_phpinfo') }}#}"><code>phpinfo</code></a></td>
+        </tr>
+    </table>
+
+    {% if collector.bundles %}
+        <h2>Active bundles</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Path</th>
+            </tr>
+            {% set bundles = collector.bundles %}
+            {% for name in bundles|keys|sort %}
+            <tr>
+                <th>{{ name }}</th>
+                <td>{{ bundles[name] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

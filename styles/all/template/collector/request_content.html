@@ -1,0 +1,111 @@
+{% extends '@nicofuma_webprofiler/profiler/layout.html' %}
+
+{% block panel %}
+<h2>Request GET Parameters</h2>
+
+{% if collector.requestquery.all|length %}
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': collector.requestquery } only %}
+{% else %}
+<p>
+	<em>No GET parameters</em>
+</p>
+{% endif %}
+
+<h2>Request POST Parameters</h2>
+
+{% if collector.requestrequest.all|length %}
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': collector.requestrequest } only %}
+{% else %}
+<p>
+	<em>No POST parameters</em>
+</p>
+{% endif %}
+
+<h2>Request Attributes</h2>
+
+{% if collector.requestattributes.all|length %}
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': collector.requestattributes } only %}
+{% else %}
+<p>
+	<em>No attributes</em>
+</p>
+{% endif %}
+
+<h2>Request Cookies</h2>
+
+{% if collector.requestcookies.all|length %}
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': collector.requestcookies } only %}
+{% else %}
+<p>
+	<em>No cookies</em>
+</p>
+{% endif %}
+
+<h2>Request Headers</h2>
+
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': collector.requestheaders } only %}
+
+<h2>Request Content</h2>
+
+{% if collector.content == false %}
+<p><em>Request content not available (it was retrieved as a resource).</em></p>
+{% elseif collector.content %}
+<pre>{{ collector.content }}</pre>
+{% else %}
+<p><em>No content</em></p>
+{% endif %}
+
+<h2>Request Server Parameters</h2>
+
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': collector.requestserver } only %}
+
+<h2>Response Headers</h2>
+
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': collector.responseheaders } only %}
+
+<h2>Session Metadata</h2>
+
+{% if collector.sessionmetadata|length %}
+{% include '@nicofuma_webprofiler/profiler/table.html' with { 'data': collector.sessionmetadata } only %}
+{% else %}
+<p>
+	<em>No session metadata</em>
+</p>
+{% endif %}
+
+<h2>Session Attributes</h2>
+
+{% if collector.sessionattributes|length %}
+{% include '@nicofuma_webprofiler/profiler/table.html' with { 'data': collector.sessionattributes } only %}
+{% else %}
+<p>
+	<em>No session attributes</em>
+</p>
+{% endif %}
+
+<h2>Flashes</h2>
+
+{% if collector.flashes|length %}
+{% include '@nicofuma_webprofiler/profiler/table.html' with { 'data': collector.flashes } only %}
+{% else %}
+<p>
+	<em>No flashes</em>
+</p>
+{% endif %}
+
+{% if profile.parent %}
+<h2><a href="{#{{ path('_profiler', { 'token': profile.parent.token }) }}#}">Parent request: {{ profile.parent.token }}</a></h2>
+
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': profile.parent.getcollector('request').requestattributes } only %}
+{% endif %}
+
+{% if profile.children|length %}
+<h2>Sub requests</h2>
+
+{% for child in profile.children %}
+<h3><a href="{#{{ path('_profiler', { 'token': child.token }) }}#}">{{ child.token }}</a></h3>
+{% include '@nicofuma_webprofiler/profiler/bag.html' with { 'bag': child.getcollector('request').requestattributes } only %}
+{% endfor %}
+{% endif %}
+
+{% endblock %}

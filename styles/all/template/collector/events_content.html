@@ -1,0 +1,71 @@
+{% extends '@nicofuma_webprofiler/profiler/layout.html' %}
+
+{% from _self import display_listener %}
+
+{% block panel %}
+{% if collector.calledlisteners|length %}
+{{ block('panelContent') }}
+{% else %}
+<h2>Events</h2>
+<p>
+	<em>No events have been recorded. Are you sure that debugging is enabled in the kernel?</em>
+</p>
+{% endif %}
+{% endblock %}
+
+{% block panelContent %}
+<h2>Called Listeners</h2>
+
+<table>
+	<tr>
+		<th>Event name</th>
+		<th>Listener</th>
+	</tr>
+	{% for listener in collector.calledlisteners %}
+	<tr>
+		<td><code>{{ listener.event }}</code></td>
+		<td><code>{{ display_listener(listener) }}</code></td>
+	</tr>
+	{% endfor %}
+</table>
+
+<h2>Not Called Listeners</h2>
+
+{% if collector.notcalledlisteners %}
+<table>
+	<tr>
+		<th>Event name</th>
+		<th>Listener</th>
+	</tr>
+	{% set listeners = collector.notcalledlisteners %}
+	{% for listener in listeners|keys|sort %}
+	<tr>
+		<td><code>{{ listeners[listener].event }}</code></td>
+		<td><code>{{ display_listener(listeners[listener]) }}</code></td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+<p>
+	<strong>No uncalled listeners</strong>.
+</p>
+<p>
+
+	All listeners were called for this request or an error occurred
+	when trying to collect uncalled listeners (in which case check the
+	logs to get more information).
+
+</p>
+{% endif %}
+{% endblock %}
+
+{% macro display_listener(listener) %}
+{% if listener.type == "Closure" %}
+Closure
+{% elseif listener.type == "Function" %}
+{% set link = listener.file %}
+{% if link %}<a href="{{ link }}">{{ listener.function }}</a>{% else %}{{ listener.function }}{% endif %}
+{% elseif listener.type == "Method" %}
+{{ listener.class }}::{% if link %}<a href="{{ listener.file }}">{{ listener.method }}</a>{% else %}{{ listener.method }}{% endif %}
+{% endif %}
+{% endmacro %}

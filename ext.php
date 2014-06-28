@@ -11,7 +11,7 @@
 *
 */
 
-namespace nicofuma\webprofilerextension;
+namespace nicofuma\webprofiler;
 
 /**
 * Extension class for board announcements
