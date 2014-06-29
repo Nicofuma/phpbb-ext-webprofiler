@@ -240,7 +240,7 @@ class profiler
 	*
 	* @throws NotFoundHttpException
 	*/
-	public function toolbarAction(Request $request, $token)
+	public function toolbarAction(Request $request, $token, $profiler_url)
 	{
 		if ($this->profiler === null) {
 			throw new NotFoundHttpException('The profiler must be enabled.');
@@ -261,13 +261,7 @@ class profiler
 			$position = 'bottom';
 		}
 
-		$url = null;
-		try {
-			$url = $this->helper->route('_profiler', array('token' => $token));
-		} catch (\Exception $e) {
-			// the profiler is not enabled
-		}
-
+		$url = str_replace('-', '/', $profiler_url);
 
 		$this->template->set_filenames(array(
 			'body'	=> "@nicofuma_webprofiler/profiler/toolbar.html",
