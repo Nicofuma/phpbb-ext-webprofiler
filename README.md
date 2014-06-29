@@ -29,17 +29,18 @@ Then you can access to these reports on `app.php/_profiler/`
 
 - [x] POC
 - [ ] Design
-- [ ] List of available reports
+- [x] List of available reports
 - [ ] Toolbar
-- [ ] Menu
-- [ ] Content
-- [ ] Search
-- [ ] Admin
-    - [ ] Purge
-    - [ ] Export
-    - [ ] Import
+- [x] Menu
+- [x] Content
+- [x] Search
+- [x] Admin
+    - [x] Purge
+    - [x] Export
+    - [x] Import
 - [ ] Additionals reports
     - [ ] Better events
     - [ ] Better timeline
     - [ ] Included files
     - [ ] Time per event / listener
+    - [ ] SQL report
