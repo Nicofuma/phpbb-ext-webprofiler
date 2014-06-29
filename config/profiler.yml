@@ -1,9 +1,11 @@
+imports:
+    - { resource: event_dispatcher_stopwatch.yml }
+
 parameters:
     debug.load_time: true
     profiler.storage.dsn: file:%core.root_path%cache/profiler/
 
 services:
-
     controller.resolver:
         class: Symfony\Component\HttpKernel\Controller\TraceableControllerResolver
         arguments:
@@ -17,22 +19,6 @@ services:
             - @service_container
             - %core.root_path%
             - @template
-        public: false
-
-    dispatcher:
-        class: nicofuma\webprofiler\phpbb\event\traceable_dispatcher
-        arguments:
-            - @dispatcher_real
-            - @stopwatch
-        calls:
-            - [setProfiler, ["@profiler"]]
-            - [addSubscriber, ["@profiler.listener"]]
-            - [addSubscriber, ["@profiler.data_collector.request"]]
-
-    dispatcher_real:
-        class: phpbb\event\dispatcher
-        arguments:
-            - @service_container
         public: false
 
     profiler:
@@ -52,12 +38,6 @@ services:
         class: Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector
         tags:
             - { name: profiler.data_collector }
-
-    profiler.data_collector.event:
-        class: Symfony\Component\HttpKernel\DataCollector\EventDataCollector
-        tags:
-            - { name: profiler.data_collector }
-
     profiler.data_collector.memory:
         class: Symfony\Component\HttpKernel\DataCollector\MemoryDataCollector
         tags:

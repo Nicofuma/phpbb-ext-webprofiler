@@ -1,0 +1,8 @@
+services:
+    dispatcher:
+        class: phpbb\event\dispatcher
+        arguments:
+            - @service_container
+        calls:
+            - [addSubscriber, ["@profiler.listener"]]
+            - [addSubscriber, ["@profiler.data_collector.request"]]

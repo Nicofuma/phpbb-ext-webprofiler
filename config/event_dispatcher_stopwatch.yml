@@ -1,0 +1,25 @@
+services:
+    dispatcher:
+        class: nicofuma\webprofiler\phpbb\event\traceable_dispatcher
+        arguments:
+            - @dispatcher_real
+            - @stopwatch
+        calls:
+            - [setProfiler, ["@profiler"]]
+            - [addSubscriber, ["@profiler.listener"]]
+            - [addSubscriber, ["@profiler.data_collector.request"]]
+
+    dispatcher_real:
+        class: phpbb\event\dispatcher
+        arguments:
+            - @service_container
+        public: false
+
+    stopwatch:
+        class: Symfony\Component\Stopwatch\Stopwatch
+        public: false
+
+    profiler.data_collector.event:
+        class: Symfony\Component\HttpKernel\DataCollector\EventDataCollector
+        tags:
+            - { name: profiler.data_collector }
