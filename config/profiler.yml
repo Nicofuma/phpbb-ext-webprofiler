@@ -1,5 +1,5 @@
 imports:
-    - { resource: event_dispatcher_stopwatch.yml }
+    - { resource: event_dispatcher.yml }
 
 parameters:
     debug.load_time: true
