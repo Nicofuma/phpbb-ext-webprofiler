@@ -6,10 +6,6 @@ WebProfilerExtension
 Clone into phpBB/ext/nicofuma/webprofiler:
 
     git clone https://github.com/Nicofuma/WebProfilerExtension.git phpBB/ext/nicofuma/webprofiler
-
-run composer
-
-    php composer.phar install
     
 Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB 3.1 NV Newspage Extension" extension.
 
@@ -17,12 +13,8 @@ Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB 3.1 NV Newspage E
 
 If you want to use use the timeline:
 
-1. Move ext/nicofuma/webprofiler/vendor/symfony/stopwatch/Symfony to /ext/Symfony
-2. Replace the content of ext/nicofuma/webprofiler/config/profiler.yml with https://gist.github.com/Nicofuma/76b4a7e22c2fe1f61d73
-
-1. Run `composer.phar install`
-2. Move `ext/nicofuma/webprofiler/vendor/symfony/stopwatch/Symfony` to `ext/Symfony`
-3. In `ext/nicofuma/webprofiler/config/profiler.yml` replace
+1. Move `ext/nicofuma/webprofiler/vendor/symfony/stopwatch/Symfony` to `ext/Symfony`
+2. In `ext/nicofuma/webprofiler/config/profiler.yml` replace
 ```
 imports:
     - { resource: event_dispatcher.yml }
@@ -32,7 +24,7 @@ with
 imports:
     - { resource: event_dispatcher_stopwatch.yml }
 ```
-4. Enable the extension in the acp
+3. Enable the extension in the acp
 
 ## How to use
 
