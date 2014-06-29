@@ -19,11 +19,6 @@
 		"symfony/stopwatch": "2.3.*"
 	},
 	"extra": {
-		"display-name": "WebProfilerExtension",
-		"version-check": {
-			"host": "vsephpbb.github.io",
-			"directory": "/abbc3",
-			"filename": "version.json"
-		}
+		"display-name": "Web Profiler Extension",
 	}
 }
