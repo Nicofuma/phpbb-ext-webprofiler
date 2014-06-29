@@ -2,7 +2,6 @@
 
 {% block body %}
 
-{#{{ render(path('_wdt', { 'token': token, 'position': 'normal' })) }}#}
 {% include '@nicofuma_webprofiler/profiler/toolbar.html' %}
 
 <div id="content">
@@ -55,7 +54,7 @@
 				</ul>
 				{% endif %}
 				{% include '@nicofuma_webprofiler/profiler/search.html' %}
-				{% include '@nicofuma_webprofiler/profiler/admin.html' with { 'token': token } only %}
+				{% include '@nicofuma_webprofiler/profiler/admin.html' %}
 			</div>
 		</div>
 	</div>

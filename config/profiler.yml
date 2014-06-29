@@ -20,10 +20,12 @@ services:
         public: false
 
     dispatcher:
-        class: phpbb\event\dispatcher
+        class: nicofuma\webprofiler\phpbb\event\traceable_dispatcher
         arguments:
-            - @service_container
+            - @dispatcher_real
+            - @stopwatch
         calls:
+            - [setProfiler, ["@profiler"]]
             - [addSubscriber, ["@profiler.listener"]]
             - [addSubscriber, ["@profiler.data_collector.request"]]
 
