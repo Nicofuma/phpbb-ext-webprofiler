@@ -112,18 +112,17 @@ class debug_toolbar_listener implements EventSubscriberInterface
 	* @param Response $response A Response instance
 	*/
 	protected function injectToolbar(Response $response)
-	{
+	{global $phpbb_root_path;
 		$content = $response->getContent();
 		$pos = strripos($content, '</body>');
-
-		$profiler_url = $this->helper->route('_profiler', array('token' => $response->headers->get('X-Debug-Token')));
 
 		if ($pos !== false) {
 			$this->template->assign_vars(array(
 				'position' => $this->position,
+				'root_path' => $phpbb_root_path,
 				'token' => $response->headers->get('X-Debug-Token'),
-				'profiler_link' => $profiler_url,
-				'toolbar_link' => $this->helper->route('_wdt', array('token' => $response->headers->get('X-Debug-Token'), 'profiler_url' => str_replace('/', '-', $profiler_url))),
+				'profiler_link' => $this->helper->route('_profiler', array('token' => $response->headers->get('X-Debug-Token'))),
+				'toolbar_link' => $this->helper->route('_wdt', array('token' => $response->headers->get('X-Debug-Token'))),
 			));
 
 			$this->template->set_filenames(array(

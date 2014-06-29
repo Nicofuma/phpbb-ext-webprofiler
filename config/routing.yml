@@ -51,5 +51,7 @@ _profiler_exception_css:
     defaults: { _controller: nicofuma.webprofiler.controller.exception:cssAction }
 
 _wdt:
-    pattern: _wdt/{token}/{profiler_url}
-    defaults: { _controller: nicofuma.webprofiler.controller.profiler:toolbarAction }
+    pattern: _wdt/{token}
+    defaults:
+        _controller: nicofuma.webprofiler.controller.profiler:toolbarAction
+        _ajax_fix_request_uri: true

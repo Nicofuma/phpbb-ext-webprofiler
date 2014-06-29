@@ -18,6 +18,7 @@ services:
             - @user
             - @service_container
             - %core.root_path%
+            - @path_helper
             - @template
         public: false
 
