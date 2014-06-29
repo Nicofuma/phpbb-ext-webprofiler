@@ -49,3 +49,7 @@ _profiler_exception:
 _profiler_exception_css:
     pattern: _profiler/{token}/exception.css
     defaults: { _controller: nicofuma.webprofiler.controller.exception:cssAction }
+
+_wdt:
+    pattern: _wdt/{token}
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:toolbarAction }

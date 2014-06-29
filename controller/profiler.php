@@ -220,7 +220,7 @@ class profiler
 		$this->profiler->disable();
 
 		$this->template->set_filenames(array(
-			'body'	=> "@WebProfiler/Profiler/info.html",
+			'body'	=> "@nicofuma_webprofiler/profiler/info.html",
 		));
 
 		$this->template->assign_vars(array(
@@ -268,13 +268,20 @@ class profiler
 			// the profiler is not enabled
 		}
 
-		return array(
+
+		$this->template->set_filenames(array(
+			'body'	=> "@nicofuma_webprofiler/profiler/toolbar.html",
+		));
+
+		$this->template->assign_vars(array(
 			'position' => $position,
 			'profile' => $profile,
 			'templates' => $this->get_modules($token, $profile),
 			'profiler_url' => $url,
 			'token' => $token,
-		);
+		));
+
+		return new Response($this->template->assign_display('body'), 200, array('Content-Type' => 'text/html'));
 	}
 
 	/**
@@ -324,7 +331,7 @@ class profiler
 		));
 
 		$this->template->set_filenames(array(
-			'body'	=> "@WebProfiler/Profiler/search.html",
+			'body'	=> "@nicofuma_webprofiler/profiler/search.html",
 		));
 
 		return new Response($this->template->assign_display('body'), 200, array('Content-Type' => 'text/html'));
