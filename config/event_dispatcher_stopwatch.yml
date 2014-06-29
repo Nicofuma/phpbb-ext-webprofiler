@@ -23,3 +23,8 @@ services:
         class: Symfony\Component\HttpKernel\DataCollector\EventDataCollector
         tags:
             - { name: profiler.data_collector }
+
+    profiler.data_collector.time:
+        class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
+        tags:
+            - { name: profiler.data_collector }

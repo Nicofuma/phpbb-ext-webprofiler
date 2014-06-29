@@ -53,11 +53,6 @@ services:
         tags:
             - { name: profiler.data_collector }
 
-    profiler.data_collector.time:
-        class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
-        tags:
-            - { name: profiler.data_collector }
-
     profiler.listener:
         class: Symfony\Component\HttpKernel\EventListener\ProfilerListener
         arguments:
