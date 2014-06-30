@@ -4,6 +4,7 @@
 * This file is part of the phpBB Forum Software package.
 *
 * @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @copyright (c) Fabien Potencier <fabien@symfony.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 * For full copyright and license information, please see
@@ -44,17 +45,6 @@ class profiler
 		$this->profiler = $profiler;
 	}
 
-	protected function get_modules($token, $profile)
-	{
-		$modules = array();
-		foreach ($profile->getCollectors() as $collector_name => $collector)
-		{
-			$modules[$collector_name] = $this->helper->route('_profiler', array('token' => $token, 'panel' => $collector_name));
-		}
-
-		return $modules;
-	}
-
 	/**
 	* Redirects to the last profiles.
 	*
@@ -83,7 +73,7 @@ class profiler
 	*
 	* @throws NotFoundHttpException
 	*/
-	public function panelAction(Request $request, $token)
+	public function panelAction(Request $request, $token, $panel = null)
 	{
 		if ($this->profiler === null) {
 			throw new NotFoundHttpException('The profiler must be enabled.');
@@ -97,7 +87,10 @@ class profiler
 			return new Response($this->template->assign_display('@nicofuma_webprofiler/profiler/info.html'), 200, array('Content-Type' => 'text/html'));
 		}
 
-		$panel = $request->query->get('panel', 'request');
+		if ($panel == null)
+		{
+			$panel = $request->query->get('panel', 'request');
+		}
 		$page = $request->query->get('page', 'home');
 
 		if (!$profile->hasCollector($panel)) {
@@ -488,5 +481,16 @@ class profiler
 			'purge_link' 	=> $this->helper->route('_profiler_purge', array('token' => $token)),
 			'export_link' 	=> $this->helper->route('_profiler_export', array('token' => $token)),
 		));
+	}
+
+	protected function get_modules($token, $profile)
+	{
+		$modules = array();
+		foreach ($profile->getCollectors() as $collector_name => $collector)
+		{
+			$modules[$collector_name] = $this->helper->route('_profiler_panel', array('token' => $token, 'panel' => $collector_name));
+		}
+
+		return $modules;
 	}
 }

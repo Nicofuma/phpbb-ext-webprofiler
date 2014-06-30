@@ -14,11 +14,11 @@
 namespace nicofuma\webprofiler\event;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\AutoExpireFlashBag;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
 * WebDebugToolbarListener injects the Web Debug Toolbar.
@@ -103,26 +103,26 @@ class debug_toolbar_listener implements EventSubscriberInterface
 			return;
 		}
 
-		$this->injectToolbar($response);
+		$this->injectToolbar($response, $event->getRequest());
 	}
 
 	/**
 	* Injects the web debug toolbar into the given Response.
 	*
 	* @param Response $response A Response instance
+	* @param Request $request The request
 	*/
-	protected function injectToolbar(Response $response)
-	{global $phpbb_root_path;
+	protected function injectToolbar(Response $response, Request $request)
+	{
 		$content = $response->getContent();
 		$pos = strripos($content, '</body>');
 
 		if ($pos !== false) {
 			$this->template->assign_vars(array(
 				'position' => $this->position,
-				'root_path' => $phpbb_root_path,
 				'token' => $response->headers->get('X-Debug-Token'),
 				'profiler_link' => $this->helper->route('_profiler', array('token' => $response->headers->get('X-Debug-Token'))),
-				'toolbar_link' => $this->helper->route('_wdt', array('token' => $response->headers->get('X-Debug-Token'))),
+				'toolbar_link' => $this->helper->route('_wdt', array('token' => $response->headers->get('X-Debug-Token'), '_referer' => $request->getUri())),
 			));
 
 			$this->template->set_filenames(array(

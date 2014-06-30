@@ -1,5 +1,5 @@
 imports:
-    - { resource: event_dispatcher.yml }
+    - { resource: event_dispatcher_stopwatch.yml }
 
 parameters:
     debug.load_time: true
@@ -18,9 +18,16 @@ services:
             - @user
             - @service_container
             - %core.root_path%
-            - @path_helper
             - @template
         public: false
+
+    url_matcher:
+        class: nicofuma\webprofiler\phpbb\routing\url_matcher
+        arguments:
+            - @symfony_request
+            - @ext.manager
+            - %core.root_path%
+            - %core.php_ext%
 
     profiler:
         class: nicofuma\webprofiler\phpbb\profiler\profiler
@@ -48,11 +55,13 @@ services:
         class: Symfony\Component\HttpKernel\DataCollector\RequestDataCollector
         tags:
             - { name: profiler.data_collector }
+            - { name: kernel.event_subscriber }
 
     profiler.data_collector.router:
         class: Symfony\Component\HttpKernel\DataCollector\RouterDataCollector
         tags:
             - { name: profiler.data_collector }
+            - { name: kernel.event_subscriber }
 
     profiler.listener:
         class: Symfony\Component\HttpKernel\EventListener\ProfilerListener

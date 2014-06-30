@@ -15,7 +15,7 @@
     <li>
         <strong>Route parameters:&nbsp;</strong>
         {% if request.routeParams|length %}
-            {% include '@nicofuma_webprofiler/profiler/table.html.twig' with { 'data': request.routeParams, 'class': 'inline' } only %}
+            {% include '@nicofuma_webprofiler/profiler/table.html' with { 'data': request.routeParams, 'class': 'inline' } only %}
         {% else %}
             <em>No parameters</em>
         {% endif %}

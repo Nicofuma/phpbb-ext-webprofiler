@@ -19,6 +19,6 @@
 		"symfony/stopwatch": "2.3.*"
 	},
 	"extra": {
-		"display-name": "Web Profiler Extension",
+		"display-name": "Web Profiler Extension"
 	}
 }

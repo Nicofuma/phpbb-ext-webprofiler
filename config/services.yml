@@ -19,6 +19,8 @@ services:
         arguments:
             - @template
             - @controller.helper
+            - @controller.provider
+            - @url_matcher
             - @?profiler
 
     nicofuma.webprofiler.event.debug_toolbar_listener:

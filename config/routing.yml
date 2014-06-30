@@ -42,6 +42,10 @@ _profiler_router:
     pattern: _profiler/{token}/router
     defaults: { _controller: nicofuma.webprofiler.controller.router:panelAction }
 
+_profiler_panel:
+    pattern: _profiler/{token}/{panel}
+    defaults: { _controller: nicofuma.webprofiler.controller.profiler:panelAction }
+
 _profiler_exception:
     pattern: _profiler/{token}/exception
     defaults: { _controller: nicofuma.webprofiler.controller.exception:showAction }
@@ -54,4 +58,3 @@ _wdt:
     pattern: _wdt/{token}
     defaults:
         _controller: nicofuma.webprofiler.controller.profiler:toolbarAction
-        _ajax_fix_request_uri: true
