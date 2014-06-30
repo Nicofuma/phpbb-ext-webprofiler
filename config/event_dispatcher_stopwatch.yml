@@ -15,6 +15,21 @@ services:
             - @service_container
         public: false
 
+    template:
+        class: nicofuma\webprofiler\phpbb\template\timed
+        arguments:
+            - @template.real
+            - @stopwatch
+
+    template.real:
+        class: phpbb\template\twig\twig
+        arguments:
+            - @path_helper
+            - @config
+            - @user
+            - @template_context
+            - @ext.manager
+
     stopwatch:
         class: Symfony\Component\Stopwatch\Stopwatch
         public: false
