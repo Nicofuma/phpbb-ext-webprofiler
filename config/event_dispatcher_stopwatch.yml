@@ -30,6 +30,17 @@ services:
             - @template_context
             - @ext.manager
 
+    dbal.conn:
+        class: nicofuma\webprofiler\phpbb\db\timed
+        arguments:
+            - @dbal.conn.real
+            - @stopwatch
+
+    dbal.conn.real:
+        class: %dbal.driver.class%
+        calls:
+            - [sql_connect, [%dbal.dbhost%, %dbal.dbuser%, %dbal.dbpasswd%, %dbal.dbname%, %dbal.dbport%, false, %dbal.new_link%]]
+
     stopwatch:
         class: Symfony\Component\Stopwatch\Stopwatch
         public: false
