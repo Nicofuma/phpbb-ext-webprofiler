@@ -197,7 +197,7 @@ class timed implements driver_interface
 	*/
 	public function sql_query_limit($query, $total, $offset = 0, $cache_ttl = 0)
 	{
-		$e = $this->stopwatch->start(sprintf('sql (%s)', $this->db->sql_layer), 'database');
+		$e = $this->stopwatch->start($query, 'database');
 
 		$result = $this->db->sql_query_limit($query, $total, $offset, $cache_ttl);
 
@@ -211,7 +211,7 @@ class timed implements driver_interface
 	*/
 	public function sql_query($query = '', $cache_ttl = 0)
 	{
-		$e = $this->stopwatch->start(sprintf('sql (%s)', $this->db->sql_layer), 'database');
+		$e = $this->stopwatch->start($query, 'database');
 
 		$result = $this->db->sql_query($query, $cache_ttl);
 
@@ -265,7 +265,7 @@ class timed implements driver_interface
 	*/
 	public function sql_multi_insert($table, $sql_ary)
 	{
-		$e = $this->stopwatch->start(sprintf('sql (%s)', $this->db->sql_layer), 'database');
+		$e = $this->stopwatch->start(sprintf('multi-insert (%s)', $table), 'database');
 
 		$result = $this->db->sql_multi_insert($table, $sql_ary);
 

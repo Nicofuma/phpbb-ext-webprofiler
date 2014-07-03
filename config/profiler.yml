@@ -64,8 +64,13 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
 
     profiler.listener:
-        class: Symfony\Component\HttpKernel\EventListener\ProfilerListener
+        class: nicofuma\webprofiler\phpbb\profiler\profiler_listener
         arguments:
+            - @symfony_request
+            - @dispatcher
+            - @http_kernel
+            - %core.root_path%
+            - %core.php_ext%
             - @profiler
 
     profiler.storage:
