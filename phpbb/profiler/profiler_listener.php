@@ -13,6 +13,7 @@
 
 namespace nicofuma\webprofiler\phpbb\profiler;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Profiler\Profiler as symfony_profiler;
 
 /**
@@ -80,22 +81,30 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 					$response
 				));
 
-			echo $response->getContent();
-
-			$this->dispatcher->dispatch(\Symfony\Component\HttpKernel\KernelEvents::TERMINATE,
-				new \Symfony\Component\HttpKernel\Event\PostResponseEvent($this->http_kernel, $this->request, $response));
+			if ($this->request->getMethod() === 'GET')
+			{
+				echo $response->getContent();
+			}
 		}
 		catch (\Exception $e)
 		{
+		}
+	}
 
+	public function stop_propagation(GetResponseEvent $event)
+	{
+		if (substr($GLOBALS['request']->server('SCRIPT_NAME'), -7) !== 'app.php')
+		{
+			$event->stopPropagation();
 		}
 	}
 
 	public static function getSubscribedEvents()
 	{
 		return array_merge(parent::getSubscribedEvents(), array (
+			\Symfony\Component\HttpKernel\KernelEvents::REQUEST => array('stop_propagation', 1),
 			'core.common' => array('on_kernel_request', 1000),
-			'core.garbage_collection' => array('on_kernel_response', -1000),
+			'core.garbage_collection' => array('on_kernel_response', 1000),
 		));
 	}
 }

@@ -13,7 +13,6 @@ services:
         class: phpbb\event\dispatcher
         arguments:
             - @service_container
-        public: false
 
     template:
         class: nicofuma\webprofiler\phpbb\template\timed
@@ -33,13 +32,8 @@ services:
     dbal.conn:
         class: nicofuma\webprofiler\phpbb\db\timed
         arguments:
-            - @dbal.conn.real
+            - @service_container
             - @stopwatch
-
-    dbal.conn.real:
-        class: %dbal.driver.class%
-        calls:
-            - [sql_connect, [%dbal.dbhost%, %dbal.dbuser%, %dbal.dbpasswd%, %dbal.dbname%, %dbal.dbport%, false, %dbal.new_link%]]
 
     stopwatch:
         class: Symfony\Component\Stopwatch\Stopwatch

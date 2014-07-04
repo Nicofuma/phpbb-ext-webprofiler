@@ -52,7 +52,7 @@ services:
             - { name: profiler.data_collector }
 
     profiler.data_collector.request:
-        class: Symfony\Component\HttpKernel\DataCollector\RequestDataCollector
+        class: nicofuma\webprofiler\data_collector\request
         tags:
             - { name: profiler.data_collector }
             - { name: kernel.event_subscriber }
