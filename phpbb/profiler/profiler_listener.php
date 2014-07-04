@@ -93,6 +93,32 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 			{
 				echo $response->getContent();
 			}
+			else if ($this->request->getMethod() === 'POST')
+			{
+				// Redirect via an HTML form for PITA webservers
+				if (@preg_match('#Microsoft|WebSTAR|Xitami#', getenv('SERVER_SOFTWARE')))
+				{
+					header('Refresh: 0; URL=index.php');
+
+					echo '<!DOCTYPE html>';
+					echo '<html dir="Direction" lang="en">';
+					echo '<head>';
+					echo '<meta charset="utf-8">';
+					echo '<meta http-equiv="refresh" content="0; url=index.php" />';
+					echo '<title>Redirect</title>';
+					echo '</head>';
+					echo '<body>';
+					echo '<div style="text-align: center;"><a href="index.php">Redirect</a></div>';
+					echo '</body>';
+					echo '</html>';
+
+					exit;
+				}
+
+				// Behave as per HTTP/1.1 spec for others
+				header('Location: index.php');
+				exit;
+			}
 		}
 		catch (\Exception $e)
 		{
