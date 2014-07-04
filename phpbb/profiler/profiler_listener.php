@@ -85,6 +85,14 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 			{
 				echo $response->getContent();
 			}
+
+			// An Exception is throw because the TraceableEventDispatcher
+			// stop all the events when KernelEvents::RESPONSE is trigger.
+			// But because we are emulating the event through the
+			// garbage_collection event, we got an exception at the end
+			// of the dispatching of the event.
+			// (stop() is called on an already stopped() event)
+			set_exception_handler(array($this, 'exception_handler'));
 		}
 		catch (\Exception $e)
 		{
@@ -97,6 +105,10 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		{
 			$event->stopPropagation();
 		}
+	}
+
+	public function exception_handler(\Exception $ex)
+	{
 	}
 
 	public static function getSubscribedEvents()
