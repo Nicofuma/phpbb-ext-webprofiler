@@ -108,7 +108,7 @@ class timed implements template
 	*/
 	public function display($handle)
 	{
-		$e = $this->stopwatch->start(sprintf('template (%s)', $handle), 'template');
+		$e = $this->stopwatch->start(sprintf('template (%s)', $this->get_source_file_for_handle($handle)), 'template');
 
 		$this->template->display($handle);
 
@@ -122,7 +122,7 @@ class timed implements template
 	*/
 	public function assign_display($handle, $template_var = '', $return_content = true)
 	{
-		$e = $this->stopwatch->start(sprintf('template (%s)', $handle), 'template');
+		$e = $this->stopwatch->start(sprintf('template (%s)', $this->get_source_file_for_handle($handle)), 'template');
 
 		$result = $this->template->assign_display($handle, $template_var, $return_content);
 

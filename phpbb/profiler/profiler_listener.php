@@ -39,6 +39,11 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 
 	public function on_kernel_request()
 	{
+		if (substr($GLOBALS['request']->server('SCRIPT_NAME'), -7) === 'app.php')
+		{
+			return;
+		}
+
 		if (! function_exists('phpbb_get_url_matcher'))
 		{
 			require($this->phpbb_root_path . 'includes/functions_url_matcher.' . $this->phpEx);
@@ -51,13 +56,20 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 					$this->request,
 					\Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST
 				));
-		} catch (\Exception $e) {
+		}
+		catch (\Exception $e)
+		{
 
 		}
 	}
 
 	public function on_kernel_response()
 	{
+		if (substr($GLOBALS['request']->server('SCRIPT_NAME'), -7) === 'app.php')
+		{
+			return;
+		}
+
 		try {
 			$response = new \Symfony\Component\HttpFoundation\Response('<html><body></body></html>');
 			$this->dispatcher->dispatch(\Symfony\Component\HttpKernel\KernelEvents::RESPONSE,
@@ -72,23 +84,18 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 
 			$this->dispatcher->dispatch(\Symfony\Component\HttpKernel\KernelEvents::TERMINATE,
 				new \Symfony\Component\HttpKernel\Event\PostResponseEvent($this->http_kernel, $this->request, $response));
-		} catch (\Exception $e) {
+		}
+		catch (\Exception $e)
+		{
 
 		}
 	}
 
 	public static function getSubscribedEvents()
 	{
-		if (!defined('PHPBB_IN_APP_PHP'))
-		{
-			return array_merge(array(), array (
-				'core.common' => array('on_kernel_request', 1000),
-				\Symfony\Component\HttpKernel\KernelEvents::REQUEST => array('onKernelRequest', 1024),
-				\Symfony\Component\HttpKernel\KernelEvents::RESPONSE => array('onKernelResponse', -100),
-				'core.garbage_collection' => array('on_kernel_response', -1000),
-			));
-		}
-
-		return parent::getSubscribedEvents();
+		return array_merge(parent::getSubscribedEvents(), array (
+			'core.common' => array('on_kernel_request', 1000),
+			'core.garbage_collection' => array('on_kernel_response', -1000),
+		));
 	}
 }
