@@ -23,6 +23,7 @@ use phpbb\db\driver\factory;
 class timed extends factory
 {
 	protected $stopwatch;
+	protected $report = array();
 
 	/**
 	* Constructor.
