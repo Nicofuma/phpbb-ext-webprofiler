@@ -117,17 +117,12 @@ class debug_toolbar_listener implements EventSubscriberInterface
 		$content = $response->getContent();
 		$pos = strripos($content, '</body>');
 
-		if (null !== $qs = $request->getQueryString()) {
-			$qs = '?' . $qs;
-		}
-		$referer = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . substr($request->getPathInfo(), 0, -1) . $qs;
-
 		if ($pos !== false) {
 			$this->template->assign_vars(array(
 				'position' => $this->position,
 				'token' => $response->headers->get('X-Debug-Token'),
 				'profiler_link' => $this->helper->route('_profiler', array('token' => $response->headers->get('X-Debug-Token'))),
-				'toolbar_link' => $this->helper->route('_wdt', array('token' => $response->headers->get('X-Debug-Token'), '_referer' => $referer)),
+				'toolbar_link' => $this->helper->route('_wdt', array('token' => $response->headers->get('X-Debug-Token'), '_referer' => $this->helper->get_current_url())),
 			));
 
 			$this->template->set_filenames(array(
