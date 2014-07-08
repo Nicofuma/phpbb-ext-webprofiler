@@ -1,0 +1,5 @@
+services:
+    profiler.data_collector.event:
+        class: Symfony\Component\HttpKernel\DataCollector\EventDataCollector
+        tags:
+            - { name: profiler.data_collector }

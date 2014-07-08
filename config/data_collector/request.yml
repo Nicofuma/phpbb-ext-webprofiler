@@ -1,0 +1,6 @@
+services:
+    profiler.data_collector.request:
+        class: nicofuma\webprofiler\data_collector\request
+        tags:
+            - { name: profiler.data_collector }
+            - { name: kernel.event_subscriber }

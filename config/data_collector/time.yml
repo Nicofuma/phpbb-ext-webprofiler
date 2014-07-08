@@ -1,4 +1,10 @@
 services:
+    dbal.conn:
+        class: nicofuma\webprofiler\phpbb\db\timed
+        arguments:
+            - @service_container
+            - @stopwatch
+
     dispatcher:
         class: nicofuma\webprofiler\phpbb\event\traceable_dispatcher
         arguments:
@@ -29,22 +35,11 @@ services:
             - @template_context
             - @ext.manager
 
-    dbal.conn:
-        class: nicofuma\webprofiler\phpbb\db\timed
-        arguments:
-            - @service_container
-            - @stopwatch
-
-    stopwatch:
-        class: Symfony\Component\Stopwatch\Stopwatch
-        public: false
-
-    profiler.data_collector.event:
-        class: Symfony\Component\HttpKernel\DataCollector\EventDataCollector
-        tags:
-            - { name: profiler.data_collector }
-
     profiler.data_collector.time:
         class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
         tags:
             - { name: profiler.data_collector }
+
+    stopwatch:
+        class: Symfony\Component\Stopwatch\Stopwatch
+        public: false

@@ -1,12 +1,15 @@
 imports:
-    - { resource: profiler.yml }
+    - { resource: data_collector/config.yml }
+    - { resource: data_collector/request.yml }
+    - { resource: data_collector/event.yml }
+    - { resource: data_collector/time.yml }
+    - { resource: data_collector/router.yml }
+    - { resource: data_collector/memory.yml }
+
+parameters:
+    profiler.storage.dsn: file:%core.root_path%cache/profiler/
 
 services:
-    nicofuma.webprofiler.event.autoloader_listener:
-        class: nicofuma\webprofiler\event\autoloader_listener
-        tags:
-            - { name: event.listener }
-
     nicofuma.webprofiler.controller.profiler:
         class: nicofuma\webprofiler\controller\profiler
         arguments:
@@ -30,3 +33,31 @@ services:
             - @controller.helper
         tags:
             - { name: kernel.event_subscriber }
+
+    profiler:
+        class: nicofuma\webprofiler\phpbb\profiler\profiler
+        arguments:
+            - @profiler.data_collector.collection
+            - @profiler.storage
+
+    profiler.data_collector.collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - @service_container
+        tags:
+            - { name: service_collection, tag: profiler.data_collector }
+
+    profiler.listener:
+        class: nicofuma\webprofiler\phpbb\profiler\profiler_listener
+        arguments:
+            - @symfony_request
+            - @dispatcher
+            - @http_kernel
+            - %core.root_path%
+            - %core.php_ext%
+            - @profiler
+
+    profiler.storage:
+        class: Symfony\Component\HttpKernel\Profiler\FileProfilerStorage
+        arguments:
+            - %profiler.storage.dsn%

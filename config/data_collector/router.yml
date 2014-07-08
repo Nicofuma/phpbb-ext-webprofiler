@@ -1,0 +1,29 @@
+services:
+    controller.resolver:
+        class: Symfony\Component\HttpKernel\Controller\TraceableControllerResolver
+        arguments:
+            - @controller.resolver_real
+            - @stopwatch
+
+    controller.resolver_real:
+        class: phpbb\controller\resolver
+        arguments:
+            - @user
+            - @service_container
+            - %core.root_path%
+            - @template
+        public: false
+
+    url_matcher:
+        class: nicofuma\webprofiler\phpbb\routing\url_matcher
+        arguments:
+            - @symfony_request
+            - @ext.manager
+            - %core.root_path%
+            - %core.php_ext%
+
+    profiler.data_collector.router:
+        class: Symfony\Component\HttpKernel\DataCollector\RouterDataCollector
+        tags:
+            - { name: profiler.data_collector }
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

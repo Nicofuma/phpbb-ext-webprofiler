@@ -1,0 +1,5 @@
+services:
+    profiler.data_collector.memory:
+        class: Symfony\Component\HttpKernel\DataCollector\MemoryDataCollector
+        tags:
+            - { name: profiler.data_collector }
