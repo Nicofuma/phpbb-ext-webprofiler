@@ -11,5 +11,4 @@ Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB 3.1 NV Newspage E
 
 ## How to use
 
-When you access to a page through the app.php script (ie: a page displayed by an extension) a report is generated and stored in a file.
-Then you can access to these reports on `app.php/_profiler/`
+Navigate to `app.php/_profiler/` or use the link in the toolbar to consult the reports.
