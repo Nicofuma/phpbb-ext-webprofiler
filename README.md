@@ -7,7 +7,7 @@ Clone into phpBB/ext/nicofuma/webprofiler:
 
     git clone https://github.com/Nicofuma/WebProfilerExtension.git phpBB/ext/nicofuma/webprofiler
     
-Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB 3.1 NV Newspage Extension" extension.
+Go to "ACP" > "Customise" > "Extensions" and enable the "Web Profiler Extension" extension.
 
 ## How to use
 
