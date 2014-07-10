@@ -17,16 +17,25 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\RequestDataCollector;
 
+/**
+* Special Request DataCollector to hide the passwords.
+*/
 class request extends RequestDataCollector
 {
 	public function collect(SymfonyRequest $request, Response $response, \Exception $exception = null)
 	{
 		parent::collect($request, $response, $exception);
 
-		if (isset($this->data['request_request']['password']))
+		$passwords = array();
+		foreach ($this->data['request_request'] as $key => $value)
 		{
-			$this->data['request_request']['password'] = '*********';
+			if (strpos($key, 'password') !== false)
+			{
+				$passwords[] =$value;
+				$this->data['request_request'][$key] = '*********';
+			}
 		}
-	}
 
+		$this->data['content'] = str_replace($passwords, '*********', $this->data['content']);
+	}
 }

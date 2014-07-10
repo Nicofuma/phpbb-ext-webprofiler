@@ -22,9 +22,6 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 /**
 * Router Controller.
-*
-* @author Fabien Potencier <fabien@symfony.com>
-* @author Tristan Darricau <tristan@darricau.eu>
 */
 class router
 {
@@ -38,11 +35,11 @@ class router
 	/**
 	* Constructor
 	*
-	* @param \phpbb\template\template $template Template object
-	* @param \phpbb\controller\helper $helper   Controller helper object
-	* @param \phpbb\controller\provider $provider The controller provider
-	* @param UrlMatcherInterface $matcher The url matcher
-	* @param Profiler $profiler The profiler object if  it exists (null otherwise)
+	* @param \phpbb\template\template	$template	Template object
+	* @param \phpbb\controller\helper	$helper		Controller helper object
+	* @param \phpbb\controller\provider	$provider	The controller provider
+	* @param UrlMatcherInterface		$matcher	The url matcher
+	* @param Profiler 					$profiler	The profiler object if  it exists (null otherwise)
 	*/
 	public function __construct(\phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\controller\provider $provider, UrlMatcherInterface $matcher = null, Profiler $profiler = null)
 	{
@@ -64,13 +61,15 @@ class router
 	*/
 	public function panelAction($token)
 	{
-		if (null === $this->profiler) {
+		if (null === $this->profiler)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
 		$this->profiler->disable();
 
-		if (null === $this->matcher || null === $this->routes) {
+		if (null === $this->matcher || null === $this->routes)
+		{
 			return new Response('The Router is not enabled.', 200, array('Content-Type' => 'text/html'));
 		}
 
@@ -104,29 +103,51 @@ class router
 		return new Response($this->template->assign_display('body'), 200, array('Content-Type' => 'text/html'));
 	}
 
+	/**
+	* Assign the common variables of layout.html
+	*
+	* @param \Symfony\Component\HttpFoundation\Request		$request	The current HTTP Request
+	* @param \Symfony\Component\HttpKernel\Profiler\Profile $profile	The current profile
+	* @param string		$token		The profiler token
+	*/
+
 	protected function assign_layout_vars($request, $profile, $token)
 	{
 		$this->assign_admin_vars($request, $profile, $token);
 
 		$this->template->assign_vars(array(
-			'search_link' 	=> $this->helper->route('_profiler_search', array('limit' => 10), false),
-			'php_info_link' 	=> $this->helper->route('_profiler_phpinfo'),
-			'search_action_link' 	=> $this->helper->route('_profiler_search', array(), false),
-			'search_bar_path' => $this->helper->route('_profiler_search_bar'),
-			'position' => 'normal',
-			'profiler_url' => $this->helper->route('_profiler', array('token' => $token))
+			'search_link'		=> $this->helper->route('_profiler_search', array('limit' => 10), false),
+			'php_info_link'		=> $this->helper->route('_profiler_phpinfo'),
+			'search_action_link'=> $this->helper->route('_profiler_search', array(), false),
+			'search_bar_path'	=> $this->helper->route('_profiler_search_bar'),
+			'position'			=> 'normal',
+			'profiler_url'		=> $this->helper->route('_profiler', array('token' => $token))
 		));
 	}
 
+	/**
+	* Assign the common variables of admin.html
+	*
+	* @param \Symfony\Component\HttpFoundation\Request		$request	The current HTTP Request
+	* @param \Symfony\Component\HttpKernel\Profiler\Profile $profile	The current profile
+	* @param string		$token		The profiler token
+	*/
 	protected function assign_admin_vars($request, $profile, $token)
 	{
 		$this->template->assign_vars(array(
-			'admin_action' 	=> $this->helper->route('_profiler_import'),
-			'purge_link' 	=> $this->helper->route('_profiler_purge', array('token' => $token)),
-			'export_link' 	=> $this->helper->route('_profiler_export', array('token' => $token)),
+			'admin_action'	=> $this->helper->route('_profiler_import'),
+			'purge_link'	=> $this->helper->route('_profiler_purge', array('token' => $token)),
+			'export_link'	=> $this->helper->route('_profiler_export', array('token' => $token)),
 		));
 	}
 
+	/**
+	* Return the list of the available modules
+	*
+	* @param string		$token The profiler token
+	* @param \Symfony\Component\HttpKernel\Profiler\Profile $profile	The current profile
+	* @return array
+	*/
 	protected function get_modules($token, $profile)
 	{
 		$modules = array();

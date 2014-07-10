@@ -14,6 +14,8 @@
 namespace nicofuma\webprofiler\phpbb\profiler;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Profiler\Profiler as symfony_profiler;
 
 /**
@@ -26,6 +28,7 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 	protected $http_kernel;
 	protected $phpbb_root_path;
 	protected $phpEx;
+	protected $redirect_url = null;
 
 	public function __construct($request, $dispatcher, $http_kernel, $phpbb_root_path, $phpEx, symfony_profiler $profiler, RequestMatcherInterface $matcher = null, $onlyException = false, $onlyMasterRequests = false)
 	{
@@ -38,7 +41,10 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		parent::__construct($profiler, $matcher, $onlyException, $onlyMasterRequests);
 	}
 
-	public function on_kernel_request()
+	/**
+	* Emulate the kernel request event
+	*/
+	public function on_common()
 	{
 		if (substr($GLOBALS['request']->server('SCRIPT_NAME'), -7) === 'app.php')
 		{
@@ -64,7 +70,10 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		}
 	}
 
-	public function on_kernel_response()
+	/**
+	* Emulate the kernel response event
+	*/
+	public function on_garbage_collection()
 	{
 		if (substr($GLOBALS['request']->server('SCRIPT_NAME'), -7) === 'app.php')
 		{
@@ -77,7 +86,7 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		// garbage_collection event, we got an exception at the end
 		// of the dispatching of the event.
 		// (stop() is called on an already stopped() event)
-		set_exception_handler(array($this, 'exception_handler'));
+		$backup = set_exception_handler(array($this, 'exception_handler'));
 
 		try {
 			$response = new \Symfony\Component\HttpFoundation\Response('<html><body></body></html>');
@@ -95,29 +104,34 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 			}
 			else if ($this->request->getMethod() === 'POST')
 			{
-				// Redirect via an HTML form for PITA webservers
-				if (@preg_match('#Microsoft|WebSTAR|Xitami#', getenv('SERVER_SOFTWARE')))
+				if ($this->redirect_url !== null)
 				{
-					header('Refresh: 0; URL=index.php');
+					$url = $this->redirect_url;
 
-					echo '<!DOCTYPE html>';
-					echo '<html dir="Direction" lang="en">';
-					echo '<head>';
-					echo '<meta charset="utf-8">';
-					echo '<meta http-equiv="refresh" content="0; url=index.php" />';
-					echo '<title>Redirect</title>';
-					echo '</head>';
-					echo '<body>';
-					echo '<div style="text-align: center;"><a href="index.php">Redirect</a></div>';
-					echo '</body>';
-					echo '</html>';
+					// Redirect via an HTML form for PITA webservers
+					if (@preg_match('#Microsoft|WebSTAR|Xitami#', getenv('SERVER_SOFTWARE')))
+					{
+						header('Refresh: 0; URL=' . $url);
 
+						echo '<!DOCTYPE html>';
+						echo '<html dir="Direction" lang="en">';
+						echo '<head>';
+						echo '<meta charset="utf-8">';
+						echo '<meta http-equiv="refresh" content="0; url=' . str_replace('&', '&amp;', $url) . '" />';
+						echo '<title>Redirect</title>';
+						echo '</head>';
+						echo '<body>';
+						echo '<div style="text-align: center;"><a href="' . str_replace('&', '&amp;', $url) . '">Redirect</a></div>';
+						echo '</body>';
+						echo '</html>';
+
+						exit;
+					}
+
+					// Behave as per HTTP/1.1 spec for others
+					header('Location: ' . $url);
 					exit;
 				}
-
-				// Behave as per HTTP/1.1 spec for others
-				header('Location: index.php');
-				exit;
 			}
 		}
 		catch (\Exception $e)
@@ -125,12 +139,38 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		}
 	}
 
-	public function stop_propagation(GetResponseEvent $event)
+	/**
+	* Avoid the call to the controller resolver
+	*
+	* @param GetResponseEvent $event
+	*/
+	public function stop_propagation_request(GetResponseEvent $event)
 	{
 		if (substr($GLOBALS['request']->server('SCRIPT_NAME'), -7) !== 'app.php')
 		{
 			$event->stopPropagation();
 		}
+	}
+
+	/**
+	* Avoid the injection of the toolbar
+	*
+	* @param FilterResponseEvent $event
+	*/
+	public function onKernelResponse(FilterResponseEvent $event)
+	{
+		$result = parent::onKernelResponse($event);
+		if ($this->request->getMethod() === 'POST')
+		{
+			$event->stopPropagation();
+		}
+
+		return $result;
+	}
+
+	public function on_redirect($url)
+	{
+		$this->redirect_url = $url['url'];
 	}
 
 	public function exception_handler(\Exception $ex)
@@ -140,9 +180,10 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 	public static function getSubscribedEvents()
 	{
 		return array_merge(parent::getSubscribedEvents(), array (
-			\Symfony\Component\HttpKernel\KernelEvents::REQUEST => array('stop_propagation', 1),
-			'core.common' => array('on_kernel_request', 1000),
-			'core.garbage_collection' => array('on_kernel_response', 1000),
+			\Symfony\Component\HttpKernel\KernelEvents::REQUEST		=> array('stop_propagation_request', 1),
+			'core.common'											=> array('on_common', 1000),
+			'core.garbage_collection'								=> array('on_garbage_collection', 1000),
+			'core.functions.redirect'								=> array('on_redirect', 0),
 		));
 	}
 }

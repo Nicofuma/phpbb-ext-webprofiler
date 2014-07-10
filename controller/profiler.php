@@ -14,6 +14,8 @@
 
 namespace nicofuma\webprofiler\controller;
 
+use nicofuma\webprofiler\phpbb\profiler\Profiler as profiler_service;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -21,24 +23,32 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
 * ProfilerController.
-*
-* @author Fabien Potencier <fabien@symfony.com>
-* @author Tristan Darricau <tristan@darricau.eu>
 */
 class profiler
 {
+	/**
+	* @var \phpbb\controller\helper
+	*/
 	private $helper;
+
+	/**
+	* @var \phpbb\template\template
+	*/
 	private $template;
+
+	/**
+	* @var profiler_service
+	*/
 	private $profiler;
 
 	/**
 	* Constructor
 	*
-	* @param \phpbb\template\template $template Template object
-	* @param \phpbb\controller\helper $helper   Controller helper object
-	* @param \nicofuma\webprofiler\phpbb\profiler\Profiler $profiler The profiler object if  it exists (null otherwise)
+	* @param \phpbb\template\template	$template	Template object
+	* @param \phpbb\controller\helper	$helper 	Controller helper object
+	* @param profiler_service			$profiler	The profiler object if  it exists (null otherwise)
 	*/
-	public function __construct(\phpbb\template\template $template, \phpbb\controller\helper $helper, \nicofuma\webprofiler\phpbb\profiler\Profiler $profiler = null)
+	public function __construct(\phpbb\template\template $template, \phpbb\controller\helper $helper, profiler_service $profiler = null)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
@@ -54,7 +64,8 @@ class profiler
 	*/
 	public function homeAction()
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
@@ -66,8 +77,9 @@ class profiler
 	/**
 	* Renders a profiler panel for the given token.
 	*
-	* @param Request $request The current HTTP request
-	* @param string $token The profiler token
+	* @param Request $request	The current HTTP request
+	* @param string $token		The profiler token
+	* @param string $panel		The current panel (can be null)
 	*
 	* @return Response A Response instance
 	*
@@ -75,14 +87,16 @@ class profiler
 	*/
 	public function panelAction(Request $request, $token, $panel = null)
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
 		$this->profiler->disable();
 
 		$profile = $this->profiler->loadProfile($token);
-		if (!$profile) {
+		if (!$profile)
+		{
 			$this->template->assign_vars(array('about' => 'no_token', 'token' => $token));
 			return new Response($this->template->assign_display('@nicofuma_webprofiler/profiler/info.html'), 200, array('Content-Type' => 'text/html'));
 		}
@@ -93,7 +107,8 @@ class profiler
 		}
 		$page = $request->query->get('page', 'home');
 
-		if (!$profile->hasCollector($panel)) {
+		if (!$profile->hasCollector($panel))
+		{
 			throw new NotFoundHttpException(sprintf('Panel "%s" is not available for token "%s".', $panel, $token));
 		}
 
@@ -128,14 +143,16 @@ class profiler
 	*/
 	public function exportAction($token)
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
 		$this->profiler->disable();
 
 		$profile = $this->profiler->loadProfile($token);
-		if (!$profile) {
+		if (!$profile)
+		{
 			throw new NotFoundHttpException(sprintf('Token "%s" does not exist.', $token));
 		}
 
@@ -154,7 +171,8 @@ class profiler
 	*/
 	public function purgeAction()
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
@@ -175,7 +193,8 @@ class profiler
 	*/
 	public function importAction(Request $request)
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
@@ -183,12 +202,14 @@ class profiler
 
 		$file = $request->files->get('file');
 
-		if (empty($file) || !$file->isValid()) {
+		if (empty($file) || !$file->isValid())
+		{
 			return new RedirectResponse($this->helper->route('_profiler_info', array('about' => 'upload_error')), 302, array('Content-Type' => 'text/html'));
 		}
 
 		$profile = $this->profiler->import(file_get_contents($file->getPathname()));
-		if (!$profile) {
+		if (!$profile)
+		{
 			return new RedirectResponse($this->helper->route('_profiler_info', array('about' => 'already_exists')), 302, array('Content-Type' => 'text/html'));
 		}
 
@@ -206,7 +227,8 @@ class profiler
 	*/
 	public function infoAction($about)
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
@@ -235,29 +257,36 @@ class profiler
 	*/
 	public function toolbarAction(Request $request, $token)
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
-		if ('empty' === $token || $token === null) {
+		if ('empty' === $token || $token === null)
+		{
 			return new Response('', 200, array('Content-Type' => 'text/html'));
 		}
 
 		$this->profiler->disable();
 
-		if (!$profile = $this->profiler->loadProfile($token)) {
+		if (!$profile = $this->profiler->loadProfile($token))
+		{
 			return new Response('', 404, array('Content-Type' => 'text/html'));
 		}
 
 		// the toolbar position (top, bottom, normal, or null -- use the configuration)
-		if ($position = $request->query->get('position') === null) {
+		if ($position = $request->query->get('position') === null)
+		{
 			$position = 'bottom';
 		}
 
 		$url = null;
-		try {
+		try
+		{
 			$url = $this->helper->route('_profiler', array('token' => $token));
-		} catch (\Exception $e) {
+		}
+		catch (\Exception $e)
+		{
 			// the profiler is not enabled
 		}
 
@@ -288,14 +317,16 @@ class profiler
 	*/
 	public function searchBarAction(Request $request)
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
 		$this->profiler->disable();
 
 		$session = $request->getSession();
-		if ($session === null) {
+		if ($session === null)
+		{
 			$ip = null;
 			$method = null;
 			$url = null;
@@ -303,7 +334,9 @@ class profiler
 			$end = null;
 			$limit = null;
 			$token = null;
-		} else {
+		}
+		else
+		{
 			$ip = $session->get('_profiler_search_ip');
 			$method = $session->get('_profiler_search_method');
 			$url = $session->get('_profiler_search_url');
@@ -342,7 +375,8 @@ class profiler
 	*/
 	public function searchResultsAction(Request $request, $token)
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
@@ -396,7 +430,8 @@ class profiler
 	*/
 	public function searchAction(Request $request)
 	{
-		if ($this->profiler === null) {
+		if ($this->profiler === null)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
@@ -411,7 +446,8 @@ class profiler
 		$token = $request->query->get('token');
 
 		$session = $request->getSession();
-		if ($session !== null) {
+		if ($session !== null)
+		{
 			$session->set('_profiler_search_ip', $ip);
 			$session->set('_profiler_search_method', $method);
 			$session->set('_profiler_search_url', $url);
@@ -421,7 +457,8 @@ class profiler
 			$session->set('_profiler_search_token', $token);
 		}
 
-		if (!empty($token)) {
+		if (!empty($token))
+		{
 			return new RedirectResponse($this->helper->route('_profiler', array('token' => $token)), 302, array('Content-Type' => 'text/html'));
 		}
 
@@ -447,7 +484,8 @@ class profiler
 	*/
 	public function phpinfoAction()
 	{
-		if (null === $this->profiler) {
+		if (null === $this->profiler)
+		{
 			throw new NotFoundHttpException('The profiler must be enabled.');
 		}
 
@@ -460,29 +498,51 @@ class profiler
 		return new Response($phpinfo, 200, array('Content-Type' => 'text/html'));
 	}
 
+	/**
+	* Assign the common variables of layout.html
+	*
+	* @param Request	$request	The current HTTP Request
+	* @param \Symfony\Component\HttpKernel\Profiler\Profile $profile	The current profile
+	* @param string		$token		The profiler token
+	*/
+
 	protected function assign_layout_vars($request, $profile, $token)
 	{
 		$this->assign_admin_vars($request, $profile, $token);
 
 		$this->template->assign_vars(array(
-			'search_link' 	=> $this->helper->route('_profiler_search', array('limit' => 10), false),
-			'php_info_link' 	=> $this->helper->route('_profiler_phpinfo'),
-			'search_action_link' 	=> $this->helper->route('_profiler_search', array(), false),
-			'search_bar_path' => $this->helper->route('_profiler_search_bar'),
-			'position' => 'normal',
-			'profiler_url' => $this->helper->route('_profiler', array('token' => $token))
+			'search_link'		=> $this->helper->route('_profiler_search', array('limit' => 10), false),
+			'php_info_link'		=> $this->helper->route('_profiler_phpinfo'),
+			'search_action_link'=> $this->helper->route('_profiler_search', array(), false),
+			'search_bar_path'	=> $this->helper->route('_profiler_search_bar'),
+			'position'			=> 'normal',
+			'profiler_url'		=> $this->helper->route('_profiler', array('token' => $token))
 		));
 	}
 
+	/**
+	* Assign the common variables of admin.html
+	*
+	* @param Request	$request	The current HTTP Request
+	* @param \Symfony\Component\HttpKernel\Profiler\Profile $profile	The current profile
+	* @param string		$token		The profiler token
+	*/
 	protected function assign_admin_vars($request, $profile, $token)
 	{
 		$this->template->assign_vars(array(
-			'admin_action' 	=> $this->helper->route('_profiler_import'),
-			'purge_link' 	=> $this->helper->route('_profiler_purge', array('token' => $token)),
-			'export_link' 	=> $this->helper->route('_profiler_export', array('token' => $token)),
+			'admin_action'	=> $this->helper->route('_profiler_import'),
+			'purge_link'	=> $this->helper->route('_profiler_purge', array('token' => $token)),
+			'export_link'	=> $this->helper->route('_profiler_export', array('token' => $token)),
 		));
 	}
 
+	/**
+	* Return the list of the available modules
+	*
+	* @param string		$token The profiler token
+	* @param \Symfony\Component\HttpKernel\Profiler\Profile $profile	The current profile
+	* @return array
+	*/
 	protected function get_modules($token, $profile)
 	{
 		$modules = array();

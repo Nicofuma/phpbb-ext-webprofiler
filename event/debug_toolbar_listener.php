@@ -4,6 +4,7 @@
 * This file is part of the phpBB Forum Software package.
 *
 * @copyright (c) phpBB Limited <https://www.phpbb.com>
+* @copyright (c) Fabien Potencier <fabien@symfony.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
 * For full copyright and license information, please see
@@ -27,8 +28,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 *
 * The WDT is only injected on well-formed HTML (with a proper </body> tag).
 * This means that the WDT is never included in sub-requests or ESI requests.
-*
-* @author Fabien Potencier <fabien@symfony.com>
 */
 class debug_toolbar_listener implements EventSubscriberInterface
 {
@@ -60,7 +59,8 @@ class debug_toolbar_listener implements EventSubscriberInterface
 		$response = $event->getResponse();
 		$request = $event->getRequest();
 
-		if ($response->headers->has('X-Debug-Token')) {
+		if ($response->headers->has('X-Debug-Token'))
+		{
 			$response->headers->set(
 				'X-Debug-Token-Link',
 				$this->helper->route('_profiler', array('token' => $response->headers->get('X-Debug-Token')))
@@ -73,9 +73,11 @@ class debug_toolbar_listener implements EventSubscriberInterface
 			return;
 		}
 
-		if ($response->headers->has('X-Debug-Token') && $response->isRedirect() && $this->interceptRedirects) {
+		if ($response->headers->has('X-Debug-Token') && $response->isRedirect() && $this->interceptRedirects)
+		{
 			$session = $request->getSession();
-			if ($session !== null && $session->isStarted() && $session->getFlashBag() instanceof AutoExpireFlashBag) {
+			if ($session !== null && $session->isStarted() && $session->getFlashBag() instanceof AutoExpireFlashBag)
+			{
 				// keep current flashes for one more request if using AutoExpireFlashBag
 				$session->getFlashBag()->setAll($session->getFlashBag()->peekAll());
 			}
@@ -117,7 +119,8 @@ class debug_toolbar_listener implements EventSubscriberInterface
 		$content = $response->getContent();
 		$pos = strripos($content, '</body>');
 
-		if ($pos !== false) {
+		if ($pos !== false)
+		{
 			$this->template->assign_vars(array(
 				'position' => $this->position,
 				'token' => $response->headers->get('X-Debug-Token'),
