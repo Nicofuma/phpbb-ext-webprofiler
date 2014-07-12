@@ -31,7 +31,7 @@ class request extends RequestDataCollector
 		{
 			if (strpos($key, 'password') !== false)
 			{
-				$passwords[] =$value;
+				$passwords[] = $value;
 				$this->data['request_request'][$key] = '*********';
 			}
 		}
