@@ -1,0 +1,40 @@
+{% if in_toolbar %}
+{% set icon %}
+<img width="20" height="28" alt="Database" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAcCAYAAABh2p9gAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQRJREFUeNpi/P//PwM1ARMDlcGogZQDlpMnT7pxc3NbA9nhQKxOpL5rQLwJiPeBsI6Ozl+YBOOOHTv+AOllQNwtLS39F2owKYZ/gRq8G4i3ggxEToggWzvc3d2Pk+1lNL4fFAs6ODi8JzdS7mMRVyDVoAMHDsANdAPiOCC+jCQvQKqBQB/BDbwBxK5AHA3E/kB8nKJkA8TMQBwLxaBIKQbi70AvTADSBiSadwFXpCikpKQU8PDwkGTaly9fHFigkaKIJid4584dkiMFFI6jkTJII0WVmpHCAixZQEXWYhDeuXMnyLsVlEQKI45qFBQZ8eRECi4DBaAlDqle/8A48ip6gAADANdQY88Uc0oGAAAAAElFTkSuQmCC" />
+<span class="sf-toolbar-status{% if 50 < collector.num_queries %} sf-toolbar-status-yellow{% endif %}">{{ collector.num_queries }}</span>
+{% if collector.num_queries > 0 %}
+<span class="sf-toolbar-info-piece-additional-detail">in {{ '%0.2f'|format(collector.time * 1000) }} ms</span>
+{% endif %}
+{% if collector.num_cached_queries %}
+<span class="sf-toolbar-info-piece-additional sf-toolbar-status sf-toolbar-status-green" title="Second level cache enabled">2l cache</span>
+{% endif %}
+{% endset %}
+{% set text %}
+<div class="sf-toolbar-info-piece">
+	<b>DB Queries</b>
+	<span>{{ collector.num_queries }}</span>
+</div>
+<div class="sf-toolbar-info-piece">
+	<b>Query time</b>
+	<span>{{ '%0.2f'|format(collector.time * 1000) }} ms</span>
+</div>
+{% if collector.num_cached_queries %}
+<div class="sf-toolbar-info-piece">
+	<b>Cache hits</b>
+	<span class="sf-toolbar-status sf-toolbar-status-green">{{ collector.num_cached_queries }}</span>
+</div>
+{% endif %}
+{% endset %}
+{% include '@nicofuma_webprofiler/profiler/toolbar_item.html' %}
+{% endif %}
+
+{#{% if in_menu %}
+<span class="label">
+    <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAcCAYAAAB/E6/TAAABLUlEQVR42u3TP0vDQBiA8UK/gDiLzi0IhU4OEunk5OQUAhGSOBUCzqWfIKSzX8DRySF0URCcMjWLIJjFD9Cpk/D6HITecEPUuzhIAz8CIdyTP/f2iqI4qaqqDx8l5Ic2uIeP/bquezCokOAFF+oCN3t4gPzSEjc4NEPaCldQbzjELTYW0RJzHDchwwem+ons6ZBpLSJ7nueJC22h0V+FzmwWV0ee59vQNV67CGVZJmEYbkNjfpY6X6I0Qo4/3RMmTdDDspuQVsJvgkP3IdMbIkIjLPBoadG2646iKJI0Ta2wxm6OdnP0/Tk6DYJgHcfxpw21RtscDTDDnaVZ26474GkkSRIrrPEv5sgMTfHe+cA2O6wPH6vOBpYQNALneHb96XTEDI6dzpEZ0VzO0Rf3pP5LMLI4tAAAAABJRU5ErkJggg==" alt="" /></span>
+    <strong>Database</strong>
+    <span class="count">
+        <span>{{ collector.num_queries }}</span>
+        <span>{{ '%0.0f'|format(collector.time * 1000) }} ms</span>
+    </span>
+</span>
+{% endif %}#}

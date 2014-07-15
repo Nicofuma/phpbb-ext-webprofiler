@@ -5,6 +5,7 @@ imports:
     - { resource: data_collector/time.yml }
     - { resource: data_collector/router.yml }
     - { resource: data_collector/memory.yml }
+    - { resource: data_collector/database.yml }
 
 parameters:
     profiler.storage.dsn: file:%core.root_path%cache/profiler/
