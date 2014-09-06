@@ -226,7 +226,6 @@ class profiler
 			// the profiler is not enabled
 		}
 
-
 		$this->template->set_filenames(array(
 			'body'	=> "@nicofuma_webprofiler/profiler/toolbar.html",
 		));

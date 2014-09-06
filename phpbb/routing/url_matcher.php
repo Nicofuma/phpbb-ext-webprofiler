@@ -13,8 +13,6 @@
 
 namespace nicofuma\webprofiler\phpbb\routing;
 
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 
@@ -72,8 +70,8 @@ class url_matcher implements UrlMatcherInterface
 	*
 	* @return array An array of parameters
 	*
-	* @throws ResourceNotFoundException If the resource could not be found
-	* @throws MethodNotAllowedException If the resource was found but the request method is not allowed
+	* @throws Symfony\Component\Routing\Exception\ResourceNotFoundException If the resource could not be found
+	* @throws Symfony\Component\Routing\Exception\MethodNotAllowedException If the resource was found but the request method is not allowed
 	*
 	* @api
 	*/

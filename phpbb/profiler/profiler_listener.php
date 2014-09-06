@@ -12,10 +12,13 @@
 */
 
 namespace nicofuma\webprofiler\phpbb\profiler;
+
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use \Symfony\Component\HttpKernel\KernelEvents;
+use \Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Profiler\Profiler as symfony_profiler;
 
 /**
@@ -57,11 +60,11 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		}
 
 		try {
-			$this->dispatcher->dispatch(\Symfony\Component\HttpKernel\KernelEvents::REQUEST,
-				new \Symfony\Component\HttpKernel\Event\GetResponseEvent(
+			$this->dispatcher->dispatch(KernelEvents::REQUEST,
+				new GetResponseEvent(
 					$this->http_kernel,
 					$this->request,
-					\Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST
+					HttpKernelInterface::MASTER_REQUEST
 				));
 		}
 		catch (\Exception $e)
@@ -86,15 +89,15 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		// garbage_collection event, we got an exception at the end
 		// of the dispatching of the event.
 		// (stop() is called on an already stopped() event)
-		$backup = set_exception_handler(array($this, 'exception_handler'));
+		set_exception_handler(array($this, 'exception_handler'));
 
 		try {
-			$response = new \Symfony\Component\HttpFoundation\Response('<html><body></body></html>');
-			$this->dispatcher->dispatch(\Symfony\Component\HttpKernel\KernelEvents::RESPONSE,
-				new \Symfony\Component\HttpKernel\Event\FilterResponseEvent(
+			$response = new Response('<html><body></body></html>');
+			$this->dispatcher->dispatch(KernelEvents::RESPONSE,
+				new FilterResponseEvent(
 					$this->http_kernel,
 					$this->request,
-					\Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST,
+					HttpKernelInterface::MASTER_REQUEST,
 					$response
 				));
 
@@ -180,10 +183,10 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 	public static function getSubscribedEvents()
 	{
 		return array_merge(parent::getSubscribedEvents(), array (
-			\Symfony\Component\HttpKernel\KernelEvents::REQUEST		=> array('stop_propagation_request', 1),
-			'core.common'											=> array('on_common', 1000),
-			'core.garbage_collection'								=> array('on_garbage_collection', 1000),
-			'core.functions.redirect'								=> array('on_redirect', 0),
+			KernelEvents::REQUEST		=> array('stop_propagation_request', 1),
+			'core.common'				=> array('on_common', 1000),
+			'core.garbage_collection'	=> array('on_garbage_collection', 1000),
+			'core.functions.redirect'	=> array('on_redirect', 0),
 		));
 	}
 }
