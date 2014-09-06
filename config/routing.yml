@@ -18,14 +18,6 @@ nicofuma_webprofiler_profiler_info:
     pattern: _profiler/info/{about}
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:infoAction }
 
-nicofuma_webprofiler_profiler_import:
-    pattern: _profiler/import
-    defaults: { _controller: nicofuma.webprofiler.controller.profiler:importAction }
-
-nicofuma_webprofiler_profiler_export:
-    pattern: _profiler/export/{token}.txt
-    defaults: { _controller: nicofuma.webprofiler.controller.profiler:exportAction }
-
 nicofuma_webprofiler_profiler_phpinfo:
     pattern: _profiler/phpinfo
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:phpinfoAction }
