@@ -116,12 +116,12 @@ class router
 		$this->assign_admin_vars($request, $profile, $token);
 
 		$this->template->assign_vars(array(
-			'search_link'		=> $this->helper->route('_profiler_search', array('limit' => 10), false),
-			'php_info_link'		=> $this->helper->route('_profiler_phpinfo'),
-			'search_action_link'=> $this->helper->route('_profiler_search', array(), false),
-			'search_bar_path'	=> $this->helper->route('_profiler_search_bar'),
+			'search_link'		=> $this->helper->route('nicofuma_webprofiler_profiler_search', array('limit' => 10), false),
+			'php_info_link'		=> $this->helper->route('nicofuma_webprofiler_profiler_phpinfo'),
+			'search_action_link'=> $this->helper->route('nicofuma_webprofiler_profiler_search', array(), false),
+			'search_bar_path'	=> $this->helper->route('nicofuma_webprofiler_profiler_search_bar'),
 			'position'			=> 'normal',
-			'profiler_url'		=> $this->helper->route('_profiler', array('token' => $token))
+			'profiler_url'		=> $this->helper->route('nicofuma_webprofiler_profiler', array('token' => $token))
 		));
 	}
 
@@ -135,9 +135,9 @@ class router
 	protected function assign_admin_vars($request, $profile, $token)
 	{
 		$this->template->assign_vars(array(
-			'admin_action'	=> $this->helper->route('_profiler_import'),
-			'purge_link'	=> $this->helper->route('_profiler_purge', array('token' => $token)),
-			'export_link'	=> $this->helper->route('_profiler_export', array('token' => $token)),
+			'admin_action'	=> $this->helper->route('nicofuma_webprofiler_profiler_import'),
+			'purge_link'	=> $this->helper->route('nicofuma_webprofiler_profiler_purge', array('token' => $token)),
+			'export_link'	=> $this->helper->route('nicofuma_webprofiler_profiler_export', array('token' => $token)),
 		));
 	}
 
@@ -153,7 +153,7 @@ class router
 		$modules = array();
 		foreach ($profile->getCollectors() as $collector_name => $collector)
 		{
-			$modules[$collector_name] = $this->helper->route('_profiler_panel', array('token' => $token, 'panel' => $collector_name));
+			$modules[$collector_name] = $this->helper->route('nicofuma_webprofiler_profiler_panel', array('token' => $token, 'panel' => $collector_name));
 		}
 
 		return $modules;

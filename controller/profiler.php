@@ -71,7 +71,7 @@ class profiler
 
 		$this->profiler->disable();
 
-		return new RedirectResponse($this->helper->route('_profiler_search_results', array('token' => 'empty', 'limit' => 10)), 302, array('Content-Type' => 'text/html'));
+		return new RedirectResponse($this->helper->route('nicofuma_webprofiler_profiler_search_results', array('token' => 'empty', 'limit' => 10)), 302, array('Content-Type' => 'text/html'));
 	}
 
 	/**
@@ -179,7 +179,7 @@ class profiler
 		$this->profiler->disable();
 		$this->profiler->purge();
 
-		return new RedirectResponse($this->helper->route('_profiler_info', array('about' => 'purge')), 302, array('Content-Type' => 'text/html'));
+		return new RedirectResponse($this->helper->route('nicofuma_webprofiler_profiler_info', array('about' => 'purge')), 302, array('Content-Type' => 'text/html'));
 	}
 
 	/**
@@ -204,16 +204,16 @@ class profiler
 
 		if (empty($file) || !$file->isValid())
 		{
-			return new RedirectResponse($this->helper->route('_profiler_info', array('about' => 'upload_error')), 302, array('Content-Type' => 'text/html'));
+			return new RedirectResponse($this->helper->route('nicofuma_webprofiler_profiler_info', array('about' => 'upload_error')), 302, array('Content-Type' => 'text/html'));
 		}
 
 		$profile = $this->profiler->import(file_get_contents($file->getPathname()));
 		if (!$profile)
 		{
-			return new RedirectResponse($this->helper->route('_profiler_info', array('about' => 'already_exists')), 302, array('Content-Type' => 'text/html'));
+			return new RedirectResponse($this->helper->route('nicofuma_webprofiler_profiler_info', array('about' => 'already_exists')), 302, array('Content-Type' => 'text/html'));
 		}
 
-		return new RedirectResponse($this->helper->route('_profiler', array('token' => $profile->getToken())), 302, array('Content-Type' => 'text/html'));
+		return new RedirectResponse($this->helper->route('nicofuma_webprofiler_profiler', array('token' => $profile->getToken())), 302, array('Content-Type' => 'text/html'));
 	}
 
 	/**
@@ -283,7 +283,7 @@ class profiler
 		$url = null;
 		try
 		{
-			$url = $this->helper->route('_profiler', array('token' => $token));
+			$url = $this->helper->route('nicofuma_webprofiler_profiler', array('token' => $token));
 		}
 		catch (\Exception $e)
 		{
@@ -394,7 +394,7 @@ class profiler
 		$tokens = $this->profiler->find($ip, $url, $limit, $method, $start, $end);
 		foreach ($tokens as &$token_value)
 		{
-			$token_value['link'] = $this->helper->route('_profiler', array('token' => $token_value['token']));
+			$token_value['link'] = $this->helper->route('nicofuma_webprofiler_profiler', array('token' => $token_value['token']));
 		}
 
 		$this->assign_layout_vars($request, $profile, $token);
@@ -459,12 +459,12 @@ class profiler
 
 		if (!empty($token))
 		{
-			return new RedirectResponse($this->helper->route('_profiler', array('token' => $token)), 302, array('Content-Type' => 'text/html'));
+			return new RedirectResponse($this->helper->route('nicofuma_webprofiler_profiler', array('token' => $token)), 302, array('Content-Type' => 'text/html'));
 		}
 
 		$tokens = $this->profiler->find($ip, $url, $limit, $method, $start, $end);
 
-		return new RedirectResponse($this->helper->route('_profiler_search_results', array(
+		return new RedirectResponse($this->helper->route('nicofuma_webprofiler_profiler_search_results', array(
 			'token' => $tokens ? $tokens[0]['token'] : 'empty',
 			'ip' => $ip,
 			'method' => $method,
@@ -511,12 +511,12 @@ class profiler
 		$this->assign_admin_vars($request, $profile, $token);
 
 		$this->template->assign_vars(array(
-			'search_link'		=> $this->helper->route('_profiler_search', array('limit' => 10), false),
-			'php_info_link'		=> $this->helper->route('_profiler_phpinfo'),
-			'search_action_link'=> $this->helper->route('_profiler_search', array(), false),
-			'search_bar_path'	=> $this->helper->route('_profiler_search_bar'),
+			'search_link'		=> $this->helper->route('nicofuma_webprofiler_profiler_search', array('limit' => 10), false),
+			'php_info_link'		=> $this->helper->route('nicofuma_webprofiler_profiler_phpinfo'),
+			'search_action_link'=> $this->helper->route('nicofuma_webprofiler_profiler_search', array(), false),
+			'search_bar_path'	=> $this->helper->route('nicofuma_webprofiler_profiler_search_bar'),
 			'position'			=> 'normal',
-			'profiler_url'		=> $this->helper->route('_profiler', array('token' => $token))
+			'profiler_url'		=> $this->helper->route('nicofuma_webprofiler_profiler', array('token' => $token))
 		));
 	}
 
@@ -530,9 +530,9 @@ class profiler
 	protected function assign_admin_vars($request, $profile, $token)
 	{
 		$this->template->assign_vars(array(
-			'admin_action'	=> $this->helper->route('_profiler_import'),
-			'purge_link'	=> $this->helper->route('_profiler_purge', array('token' => $token)),
-			'export_link'	=> $this->helper->route('_profiler_export', array('token' => $token)),
+			'admin_action'	=> $this->helper->route('nicofuma_webprofiler_profiler_import'),
+			'purge_link'	=> $this->helper->route('nicofuma_webprofiler_profiler_purge', array('token' => $token)),
+			'export_link'	=> $this->helper->route('nicofuma_webprofiler_profiler_export', array('token' => $token)),
 		));
 	}
 
@@ -548,7 +548,7 @@ class profiler
 		$modules = array();
 		foreach ($profile->getCollectors() as $collector_name => $collector)
 		{
-			$modules[$collector_name] = $this->helper->route('_profiler_panel', array('token' => $token, 'panel' => $collector_name));
+			$modules[$collector_name] = $this->helper->route('nicofuma_webprofiler_profiler_panel', array('token' => $token, 'panel' => $collector_name));
 		}
 
 		return $modules;
