@@ -1,5 +1,5 @@
 services:
-    profiler.data_collector.config:
+    nicofuma.webprofiler.profiler.data_collector.config:
         class: Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector
         tags:
             - { name: profiler.data_collector }

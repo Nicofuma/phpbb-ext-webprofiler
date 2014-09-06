@@ -1,5 +1,5 @@
 services:
-    profiler.data_collector.database:
+    nicofuma.webprofiler.profiler.data_collector.database:
         class: nicofuma\webprofiler\data_collector\database
         arguments:
             - @dbal.conn

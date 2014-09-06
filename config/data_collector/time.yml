@@ -3,19 +3,19 @@ services:
         class: nicofuma\webprofiler\phpbb\db\timed
         arguments:
             - @service_container
-            - @stopwatch
+            - @nicofuma.webprofiler.stopwatch
 
     dispatcher:
         class: nicofuma\webprofiler\phpbb\event\traceable_dispatcher
         arguments:
-            - @dispatcher_real
-            - @stopwatch
+            - @nicofuma.webprofiler.dispatcher_real
+            - @nicofuma.webprofiler.stopwatch
         calls:
-            - [setProfiler, ["@profiler"]]
-            - [addSubscriber, ["@profiler.listener"]]
-            - [addSubscriber, ["@profiler.data_collector.request"]]
+            - [setProfiler, ["@nicofuma.webprofiler.profiler"]]
+            - [addSubscriber, ["@nicofuma.webprofiler.profiler.listener"]]
+            - [addSubscriber, ["@nicofuma.webprofiler.profiler.data_collector.request"]]
 
-    dispatcher_real:
+    nicofuma.webprofiler.dispatcher_real:
         class: phpbb\event\dispatcher
         arguments:
             - @service_container
@@ -23,10 +23,10 @@ services:
     template:
         class: nicofuma\webprofiler\phpbb\template\timed
         arguments:
-            - @template.real
-            - @stopwatch
+            - @nicofuma.webprofiler.template.real
+            - @nicofuma.webprofiler.stopwatch
 
-    template.real:
+    nicofuma.webprofiler.template.real:
         class: phpbb\template\twig\twig
         arguments:
             - @path_helper
@@ -35,11 +35,11 @@ services:
             - @template_context
             - @ext.manager
 
-    profiler.data_collector.time:
+    nicofuma.webprofiler.profiler.data_collector.time:
         class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
         tags:
             - { name: profiler.data_collector }
 
-    stopwatch:
+    nicofuma.webprofiler.stopwatch:
         class: Symfony\Component\Stopwatch\Stopwatch
         public: false

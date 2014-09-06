@@ -8,7 +8,7 @@ imports:
     - { resource: data_collector/database.yml }
 
 parameters:
-    profiler.storage.dsn: file:%core.root_path%cache/profiler/
+    nicofuma.webprofiler.profiler.storage.dsn: file:%core.root_path%cache/profiler/
 
 services:
     nicofuma.webprofiler.controller.profiler:
@@ -16,7 +16,7 @@ services:
         arguments:
             - @template
             - @controller.helper
-            - @?profiler
+            - @?nicofuma.webprofiler.profiler
 
     nicofuma.webprofiler.controller.router:
         class: nicofuma\webprofiler\controller\router
@@ -24,8 +24,8 @@ services:
             - @template
             - @controller.helper
             - @controller.provider
-            - @url_matcher
-            - @?profiler
+            - @nicofuma.webprofiler.url_matcher
+            - @?nicofuma.webprofiler.profiler
 
     nicofuma.webprofiler.event.debug_toolbar_listener:
         class: nicofuma\webprofiler\event\debug_toolbar_listener
@@ -35,20 +35,20 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    profiler:
+    nicofuma.webprofiler.profiler:
         class: nicofuma\webprofiler\phpbb\profiler\profiler
         arguments:
-            - @profiler.data_collector.collection
-            - @profiler.storage
+            - @nicofuma.webprofiler.profiler.data_collector.collection
+            - @nicofuma.webprofiler.profiler.storage
 
-    profiler.data_collector.collection:
+    nicofuma.webprofiler.profiler.data_collector.collection:
         class: phpbb\di\service_collection
         arguments:
             - @service_container
         tags:
             - { name: service_collection, tag: profiler.data_collector }
 
-    profiler.listener:
+    nicofuma.webprofiler.profiler.listener:
         class: nicofuma\webprofiler\phpbb\profiler\profiler_listener
         arguments:
             - @symfony_request
@@ -56,9 +56,9 @@ services:
             - @http_kernel
             - %core.root_path%
             - %core.php_ext%
-            - @profiler
+            - @nicofuma.webprofiler.profiler
 
-    profiler.storage:
+    nicofuma.webprofiler.profiler.storage:
         class: Symfony\Component\HttpKernel\Profiler\FileProfilerStorage
         arguments:
-            - %profiler.storage.dsn%
+            - %nicofuma.webprofiler.profiler.storage.dsn%
