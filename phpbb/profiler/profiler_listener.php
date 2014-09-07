@@ -171,9 +171,12 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		return $result;
 	}
 
-	public function on_redirect($url)
+	public function on_redirect($event)
 	{
-		$this->redirect_url = $url['url'];
+		if (!$event['return'])
+		{
+			$this->redirect_url = $event['url'];
+		}
 	}
 
 	public function exception_handler(\Exception $ex)
