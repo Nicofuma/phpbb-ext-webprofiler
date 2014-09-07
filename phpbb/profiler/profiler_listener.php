@@ -103,7 +103,10 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 
 			if ($this->request->getMethod() === 'GET')
 			{
-				echo $response->getContent();
+				if ('<html><body></body></html>' !== $response->getContent())
+				{
+					echo $response->getContent();
+				}
 			}
 			else if ($this->request->getMethod() === 'POST')
 			{
