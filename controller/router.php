@@ -135,9 +135,7 @@ class router
 	protected function assign_admin_vars($request, $profile, $token)
 	{
 		$this->template->assign_vars(array(
-			'admin_action'	=> $this->helper->route('nicofuma_webprofiler_profiler_import'),
 			'purge_link'	=> $this->helper->route('nicofuma_webprofiler_profiler_purge', array('token' => $token)),
-			'export_link'	=> $this->helper->route('nicofuma_webprofiler_profiler_export', array('token' => $token)),
 		));
 	}
 
