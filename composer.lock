@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a0d85e7ba32c0602248a236cef9ab2b5",
+    "hash": "8b4ec58572f9b92a9a42f9294766ab66",
     "packages": [
         {
             "name": "composer/installers",
@@ -182,7 +182,7 @@
             ],
             "authors": [
                 {
-                    "name": "Alexandre Salom\u00e9",
+                    "name": "Alexandre Salomé",
                     "email": "alexandre.salome@gmail.com",
                     "homepage": "http://alexandre-salome.fr"
                 },
@@ -485,9 +485,7 @@
             "time": "2014-08-31 03:22:04"
         }
     ],
-    "aliases": [
-
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "phpbb/epv": 20
@@ -495,7 +493,5 @@
     "platform": {
         "php": ">=5.3.3"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }
