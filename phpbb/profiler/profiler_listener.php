@@ -101,42 +101,39 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 					$response
 				));
 
-			if ($this->request->getMethod() === 'GET')
+			if ($this->redirect_url !== null)
+			{
+				$url = $this->redirect_url;
+
+				// Redirect via an HTML form for PITA webservers
+				if (@preg_match('#Microsoft|WebSTAR|Xitami#', getenv('SERVER_SOFTWARE')))
+				{
+					header('Refresh: 0; URL=' . $url);
+
+					echo '<!DOCTYPE html>';
+					echo '<html dir="Direction" lang="en">';
+					echo '<head>';
+					echo '<meta charset="utf-8">';
+					echo '<meta http-equiv="refresh" content="0; url=' . str_replace('&', '&amp;', $url) . '" />';
+					echo '<title>Redirect</title>';
+					echo '</head>';
+					echo '<body>';
+					echo '<div style="text-align: center;"><a href="' . str_replace('&', '&amp;', $url) . '">Redirect</a></div>';
+					echo '</body>';
+					echo '</html>';
+
+					exit;
+				}
+
+				// Behave as per HTTP/1.1 spec for others
+				header('Location: ' . $url);
+				exit;
+			}
+			else if ($this->request->getMethod() === 'GET')
 			{
 				if ('<html><body></body></html>' !== $response->getContent())
 				{
 					echo $response->getContent();
-				}
-			}
-			else if ($this->request->getMethod() === 'POST')
-			{
-				if ($this->redirect_url !== null)
-				{
-					$url = $this->redirect_url;
-
-					// Redirect via an HTML form for PITA webservers
-					if (@preg_match('#Microsoft|WebSTAR|Xitami#', getenv('SERVER_SOFTWARE')))
-					{
-						header('Refresh: 0; URL=' . $url);
-
-						echo '<!DOCTYPE html>';
-						echo '<html dir="Direction" lang="en">';
-						echo '<head>';
-						echo '<meta charset="utf-8">';
-						echo '<meta http-equiv="refresh" content="0; url=' . str_replace('&', '&amp;', $url) . '" />';
-						echo '<title>Redirect</title>';
-						echo '</head>';
-						echo '<body>';
-						echo '<div style="text-align: center;"><a href="' . str_replace('&', '&amp;', $url) . '">Redirect</a></div>';
-						echo '</body>';
-						echo '</html>';
-
-						exit;
-					}
-
-					// Behave as per HTTP/1.1 spec for others
-					header('Location: ' . $url);
-					exit;
 				}
 			}
 		}
@@ -174,11 +171,11 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		return $result;
 	}
 
-	public function on_redirect($event)
+	public function on_redirect($url)
 	{
-		if (!$event['return'])
+		if (!$url['return'])
 		{
-			$this->redirect_url = $event['url'];
+			$this->redirect_url = $url['url'];
 		}
 	}
 
