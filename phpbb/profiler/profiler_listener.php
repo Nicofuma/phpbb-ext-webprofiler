@@ -129,7 +129,7 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 				header('Location: ' . $url);
 				exit;
 			}
-			else if ($this->request->getMethod() === 'GET')
+			else if ($response->getContent() !== '<html><body></body></html>')
 			{
 				if ('<html><body></body></html>' !== $response->getContent())
 				{
@@ -163,7 +163,9 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 	public function onKernelResponse(FilterResponseEvent $event)
 	{
 		$result = parent::onKernelResponse($event);
-		if ($this->request->getMethod() === 'POST')
+		$content = ob_get_contents();
+
+		if ($this->request->getMethod() === 'POST' && empty($content))
 		{
 			$event->stopPropagation();
 		}
