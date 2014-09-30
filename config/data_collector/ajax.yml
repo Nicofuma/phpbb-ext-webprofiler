@@ -1,0 +1,5 @@
+services:
+    nicofuma.webprofiler.profiler.data_collector.ajax:
+        class: nicofuma\webprofiler\data_collector\ajax
+        tags:
+            - { name: profiler.data_collector }

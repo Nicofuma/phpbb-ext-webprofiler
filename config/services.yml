@@ -2,6 +2,7 @@ imports:
     - { resource: data_collector/config.yml }
     - { resource: data_collector/request.yml }
     - { resource: data_collector/event.yml }
+    - { resource: data_collector/ajax.yml }
     - { resource: data_collector/time.yml }
     - { resource: data_collector/router.yml }
     - { resource: data_collector/memory.yml }
@@ -9,6 +10,7 @@ imports:
 
 parameters:
     nicofuma.webprofiler.profiler.storage.dsn: file:%core.root_path%cache/profiler/
+    excluded_ajax_paths: /_wdt
 
 services:
     nicofuma.webprofiler.controller.profiler:

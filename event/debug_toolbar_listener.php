@@ -39,14 +39,16 @@ class debug_toolbar_listener implements EventSubscriberInterface
 	protected $interceptRedirects;
 	protected $mode;
 	protected $position;
+	protected $excludedAjaxPaths;
 
-	public function __construct(\phpbb\template\template $template, \phpbb\controller\helper $helper, $interceptRedirects = false, $mode = self::ENABLED, $position = 'bottom')
+	public function __construct(\phpbb\template\template $template, \phpbb\controller\helper $helper, $interceptRedirects = false, $mode = self::ENABLED, $position = 'bottom', $excludedAjaxPaths = '/_wdt')
 	{
 		$this->template = $template;
 		$this->helper = $helper;
 		$this->interceptRedirects = (bool) $interceptRedirects;
 		$this->mode = (int) $mode;
 		$this->position = $position;
+		$this->excludedAjaxPaths = $excludedAjaxPaths;
 	}
 
 	public function isEnabled()
@@ -126,6 +128,7 @@ class debug_toolbar_listener implements EventSubscriberInterface
 				'token' => $response->headers->get('X-Debug-Token'),
 				'profiler_link' => $this->helper->route('nicofuma_webprofiler_profiler', array('token' => $response->headers->get('X-Debug-Token'))),
 				'toolbar_link' => $this->helper->route('nicofuma_webprofiler_wdt', array('token' => $response->headers->get('X-Debug-Token'), '_referer' => $this->helper->get_current_url())),
+				'excluded_ajax_paths' => $this->excludedAjaxPaths,
 			));
 
 			$this->template->set_filenames(array(
