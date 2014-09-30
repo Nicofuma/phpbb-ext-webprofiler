@@ -1,106 +1,5 @@
 [
     {
-        "name": "nikic/php-parser",
-        "version": "v0.9.5",
-        "version_normalized": "0.9.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nikic/PHP-Parser.git",
-            "reference": "ef70767475434bdb3615b43c327e2cae17ef12eb"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ef70767475434bdb3615b43c327e2cae17ef12eb",
-            "reference": "ef70767475434bdb3615b43c327e2cae17ef12eb",
-            "shasum": ""
-        },
-        "require": {
-            "ext-tokenizer": "*",
-            "php": ">=5.2"
-        },
-        "time": "2014-07-23 18:24:17",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.9-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "PHPParser": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Nikita Popov"
-            }
-        ],
-        "description": "A PHP parser written in PHP",
-        "keywords": [
-            "parser",
-            "php"
-        ]
-    },
-    {
-        "name": "gitonomy/gitlib",
-        "version": "v0.1.7",
-        "version_normalized": "0.1.7.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/gitonomy/gitlib.git",
-            "reference": "7a46107cfb8552b312101e0d5906e95d54d7ddc6"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/gitonomy/gitlib/zipball/7a46107cfb8552b312101e0d5906e95d54d7ddc6",
-            "reference": "7a46107cfb8552b312101e0d5906e95d54d7ddc6",
-            "shasum": ""
-        },
-        "require": {
-            "symfony/process": "~2.4"
-        },
-        "require-dev": {
-            "psr/log": "~1"
-        },
-        "suggest": {
-            "psr/log": "Add some log"
-        },
-        "time": "2014-07-13 19:02:31",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Gitonomy\\Git": [
-                    "src/",
-                    "tests/"
-                ]
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Alexandre Salom\u00e9",
-                "email": "alexandre.salome@gmail.com",
-                "homepage": "http://alexandre-salome.fr"
-            },
-            {
-                "name": "Julien DIDIER",
-                "email": "genzo.wm@gmail.com",
-                "homepage": "http://www.jdidier.net"
-            }
-        ],
-        "description": "Library for accessing git",
-        "homepage": "http://gitonomy.com"
-    },
-    {
         "name": "composer/installers",
         "version": "v1.0.18",
         "version_normalized": "1.0.18.0",
@@ -291,6 +190,55 @@
         "homepage": "http://symfony.com"
     },
     {
+        "name": "symfony/finder",
+        "version": "v2.5.4",
+        "version_normalized": "2.5.4.0",
+        "target-dir": "Symfony/Component/Finder",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Finder.git",
+            "reference": "f40854d1a19c339c7f969f8f6d6d6e9153311c4c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/Finder/zipball/f40854d1a19c339c7f969f8f6d6d6e9153311c4c",
+            "reference": "f40854d1a19c339c7f969f8f6d6d6e9153311c4c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2014-09-03 09:00:14",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.5-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Finder\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            },
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            }
+        ],
+        "description": "Symfony Finder Component",
+        "homepage": "http://symfony.com"
+    },
+    {
         "name": "symfony/console",
         "version": "v2.5.4",
         "version_normalized": "2.5.4.0",
@@ -348,53 +296,51 @@
         "homepage": "http://symfony.com"
     },
     {
-        "name": "symfony/finder",
-        "version": "v2.5.4",
-        "version_normalized": "2.5.4.0",
-        "target-dir": "Symfony/Component/Finder",
+        "name": "nikic/php-parser",
+        "version": "v0.9.5",
+        "version_normalized": "0.9.5.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/Finder.git",
-            "reference": "f40854d1a19c339c7f969f8f6d6d6e9153311c4c"
+            "url": "https://github.com/nikic/PHP-Parser.git",
+            "reference": "ef70767475434bdb3615b43c327e2cae17ef12eb"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/Finder/zipball/f40854d1a19c339c7f969f8f6d6d6e9153311c4c",
-            "reference": "f40854d1a19c339c7f969f8f6d6d6e9153311c4c",
+            "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ef70767475434bdb3615b43c327e2cae17ef12eb",
+            "reference": "ef70767475434bdb3615b43c327e2cae17ef12eb",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.3.3"
+            "ext-tokenizer": "*",
+            "php": ">=5.2"
         },
-        "time": "2014-09-03 09:00:14",
+        "time": "2014-07-23 18:24:17",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "2.5-dev"
+                "dev-master": "0.9-dev"
             }
         },
         "installation-source": "dist",
         "autoload": {
             "psr-0": {
-                "Symfony\\Component\\Finder\\": ""
+                "PHPParser": "lib/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "MIT"
+            "BSD-3-Clause"
         ],
         "authors": [
             {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
-            },
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
+                "name": "Nikita Popov"
             }
         ],
-        "description": "Symfony Finder Component",
-        "homepage": "http://symfony.com"
+        "description": "A PHP parser written in PHP",
+        "keywords": [
+            "parser",
+            "php"
+        ]
     },
     {
         "name": "symfony/process",
@@ -444,6 +390,60 @@
         ],
         "description": "Symfony Process Component",
         "homepage": "http://symfony.com"
+    },
+    {
+        "name": "gitonomy/gitlib",
+        "version": "v0.1.7",
+        "version_normalized": "0.1.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/gitonomy/gitlib.git",
+            "reference": "7a46107cfb8552b312101e0d5906e95d54d7ddc6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/gitonomy/gitlib/zipball/7a46107cfb8552b312101e0d5906e95d54d7ddc6",
+            "reference": "7a46107cfb8552b312101e0d5906e95d54d7ddc6",
+            "shasum": ""
+        },
+        "require": {
+            "symfony/process": "~2.4"
+        },
+        "require-dev": {
+            "psr/log": "~1"
+        },
+        "suggest": {
+            "psr/log": "Add some log"
+        },
+        "time": "2014-07-13 19:02:31",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Gitonomy\\Git": [
+                    "src/",
+                    "tests/"
+                ]
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Alexandre Salomé",
+                "email": "alexandre.salome@gmail.com",
+                "homepage": "http://alexandre-salome.fr"
+            },
+            {
+                "name": "Julien DIDIER",
+                "email": "genzo.wm@gmail.com",
+                "homepage": "http://www.jdidier.net"
+            }
+        ],
+        "description": "Library for accessing git",
+        "homepage": "http://gitonomy.com"
     },
     {
         "name": "phpbb/epv",
