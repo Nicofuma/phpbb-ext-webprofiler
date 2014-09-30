@@ -33,6 +33,9 @@ services:
             - @config
             - @user
             - @template_context
+            - @template.twig.environment
+            - %core.template.cache_path%
+            - @template.twig.extensions.collection
             - @ext.manager
 
     nicofuma.webprofiler.profiler.data_collector.time:
