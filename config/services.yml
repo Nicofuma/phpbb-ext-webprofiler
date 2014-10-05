@@ -10,7 +10,7 @@ imports:
 
 parameters:
     nicofuma.webprofiler.profiler.storage.dsn: file:%core.root_path%cache/profiler/
-    excluded_ajax_paths: /_wdt
+    nicofuma.webprofiler.excluded_ajax_paths: /_wdt
 
 services:
     nicofuma.webprofiler.controller.profiler:
