@@ -30,7 +30,7 @@ services:
             - @?nicofuma.webprofiler.profiler
 
     nicofuma.webprofiler.event.debug_toolbar_listener:
-        class: nicofuma\webprofiler\event\debug_toolbar_listener
+        class: nicofuma\webprofiler\listeners\debug_toolbar_listener
         arguments:
             - @template
             - @controller.helper
@@ -51,7 +51,7 @@ services:
             - { name: service_collection, tag: profiler.data_collector }
 
     nicofuma.webprofiler.profiler.listener:
-        class: nicofuma\webprofiler\phpbb\profiler\profiler_listener
+        class: nicofuma\webprofiler\listeners\profiler_listener
         arguments:
             - @symfony_request
             - @dispatcher
