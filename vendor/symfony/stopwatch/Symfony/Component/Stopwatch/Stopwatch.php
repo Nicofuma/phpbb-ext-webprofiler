@@ -58,7 +58,7 @@ class Stopwatch
      *
      * The id parameter is used to retrieve the events from this section.
      *
-     * @see getSectionEvents
+     * @see getSectionEvents()
      *
      * @param string $id The identifier of the section
      *
@@ -90,7 +90,7 @@ class Stopwatch
     }
 
     /**
-     * Checks if the event was started
+     * Checks if the event was started.
      *
      * @param string $name The event name
      *
@@ -137,7 +137,6 @@ class Stopwatch
         return isset($this->sections[$id]) ? $this->sections[$id]->getEvents() : array();
     }
 }
-
 
 /**
  * @internal This class is for internal usage only
@@ -248,7 +247,7 @@ class Section
     }
 
     /**
-     * Checks if the event was started
+     * Checks if the event was started.
      *
      * @param string $name The event name
      *
