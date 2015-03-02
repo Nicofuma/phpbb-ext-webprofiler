@@ -11,7 +11,7 @@ services:
             - @nicofuma.webprofiler.dispatcher_real
             - @nicofuma.webprofiler.stopwatch
         calls:
-            - [setProfiler, ["@nicofuma.webprofiler.profiler"]]
+            #- [setProfiler, ["@nicofuma.webprofiler.profiler"]]
             - [addSubscriber, ["@nicofuma.webprofiler.profiler.listener"]]
             - [addSubscriber, ["@nicofuma.webprofiler.profiler.data_collector.request"]]
 
@@ -40,6 +40,9 @@ services:
 
     nicofuma.webprofiler.profiler.data_collector.time:
         class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
+        arguments:
+            - ~
+            - @nicofuma.webprofiler.stopwatch
         tags:
             - { name: profiler.data_collector }
 

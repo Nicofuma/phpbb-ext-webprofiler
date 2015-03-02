@@ -28,7 +28,7 @@ class router
 	private $helper;
 	private $profiler;
 	private $template;
-	private $matcher;
+	private $router;
 	private $routes;
 
 
@@ -37,17 +37,17 @@ class router
 	*
 	* @param \phpbb\template\template	$template	Template object
 	* @param \phpbb\controller\helper	$helper		Controller helper object
-	* @param \phpbb\controller\provider	$provider	The controller provider
+	* @param \phpbb\routing\router	$router	The controller provider
 	* @param UrlMatcherInterface		$matcher	The url matcher
 	* @param Profiler 					$profiler	The profiler object if  it exists (null otherwise)
 	*/
-	public function __construct(\phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\controller\provider $provider, UrlMatcherInterface $matcher = null, Profiler $profiler = null)
+	public function __construct(\phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\routing\router $router, Profiler $profiler = null)
 	{
 		$this->helper = $helper;
 		$this->profiler = $profiler;
 		$this->template = $template;
-		$this->matcher = $matcher;
-		$this->routes = $provider->get_routes();
+		$this->router = $router;
+		$this->routes = $router->get_routes();
 	}
 
 	/**
@@ -68,14 +68,14 @@ class router
 
 		$this->profiler->disable();
 
-		if (null === $this->matcher || null === $this->routes)
+		if (null === $this->router || null === $this->routes)
 		{
 			return new Response('The Router is not enabled.', 200, array('Content-Type' => 'text/html'));
 		}
 
 		$profile = $this->profiler->loadProfile($token);
 
-		$context = $this->matcher->getContext();
+		$context = $this->router->getContext();
 		$context->setMethod($profile->getMethod());
 		$matcher = new TraceableUrlMatcher($this->routes, $context);
 

@@ -14,14 +14,6 @@ services:
             - @template
         public: false
 
-    nicofuma.webprofiler.url_matcher:
-        class: nicofuma\webprofiler\phpbb\routing\url_matcher
-        arguments:
-            - @symfony_request
-            - @ext.manager
-            - %core.root_path%
-            - %core.php_ext%
-
     nicofuma.webprofiler.profiler.data_collector.router:
         class: Symfony\Component\HttpKernel\DataCollector\RouterDataCollector
         tags:

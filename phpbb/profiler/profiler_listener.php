@@ -13,9 +13,13 @@
 
 namespace nicofuma\webprofiler\phpbb\profiler;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use \Symfony\Component\HttpKernel\KernelEvents;
 use \Symfony\Component\HttpFoundation\Response;
@@ -26,22 +30,24 @@ use Symfony\Component\HttpKernel\Profiler\Profiler as symfony_profiler;
 */
 class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\ProfilerListener
 {
-	protected $request;
+	protected $symfony_request;
+	protected $request_stack;
 	protected $dispatcher;
 	protected $http_kernel;
 	protected $phpbb_root_path;
 	protected $phpEx;
 	protected $redirect_url = null;
 
-	public function __construct($request, $dispatcher, $http_kernel, $phpbb_root_path, $phpEx, symfony_profiler $profiler, RequestMatcherInterface $matcher = null, $onlyException = false, $onlyMasterRequests = false)
+	public function __construct(Request $symfony_request, RequestStack $request_stack, EventDispatcherInterface $dispatcher, HttpKernelInterface $http_kernel, $phpbb_root_path, $phpEx, symfony_profiler $profiler, RequestMatcherInterface $matcher = null, $onlyException = false, $onlyMasterRequests = false)
 	{
-		$this->request = $request;
+		$this->symfony_request = $symfony_request;
+		$this->request_stack = $request_stack;
 		$this->dispatcher = $dispatcher;
 		$this->http_kernel = $http_kernel;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->phpEx = $phpEx;
 
-		parent::__construct($profiler, $matcher, $onlyException, $onlyMasterRequests);
+		parent::__construct($profiler, $matcher, $onlyException, $onlyMasterRequests, $request_stack);
 	}
 
 	/**
@@ -54,16 +60,13 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 			return;
 		}
 
-		if (! function_exists('phpbb_get_url_matcher'))
-		{
-			require($this->phpbb_root_path . 'includes/functions_url_matcher.' . $this->phpEx);
-		}
-
 		try {
+			$this->request_stack->push($this->symfony_request);
+
 			$this->dispatcher->dispatch(KernelEvents::REQUEST,
 				new GetResponseEvent(
 					$this->http_kernel,
-					$this->request,
+					$this->request_stack->getCurrentRequest(),
 					HttpKernelInterface::MASTER_REQUEST
 				));
 		}
@@ -96,7 +99,7 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 			$this->dispatcher->dispatch(KernelEvents::RESPONSE,
 				new FilterResponseEvent(
 					$this->http_kernel,
-					$this->request,
+					$this->request_stack->getCurrentRequest(),
 					HttpKernelInterface::MASTER_REQUEST,
 					$response
 				));
@@ -122,11 +125,23 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 					echo '</body>';
 					echo '</html>';
 
+					$this->dispatcher->dispatch(KernelEvents::TERMINATE,
+					new PostResponseEvent($this->http_kernel,
+							$this->request_stack->getCurrentRequest(),
+							$response
+						)
+					);
 					exit;
 				}
 
 				// Behave as per HTTP/1.1 spec for others
 				header('Location: ' . $url);
+				$this->dispatcher->dispatch(KernelEvents::TERMINATE,
+					new PostResponseEvent($this->http_kernel,
+						$this->request_stack->getCurrentRequest(),
+						$response
+					)
+				);
 				exit;
 			}
 			else if ($response->getContent() !== '<html><body></body></html>')
@@ -136,6 +151,13 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 					echo $response->getContent();
 				}
 			}
+
+			$this->dispatcher->dispatch(KernelEvents::TERMINATE,
+				new PostResponseEvent($this->http_kernel,
+					$this->request_stack->getCurrentRequest(),
+					$response
+				)
+			);
 		}
 		catch (\Exception $e)
 		{
@@ -165,7 +187,7 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		$result = parent::onKernelResponse($event);
 		$content = ob_get_contents();
 
-		if ($this->request->getMethod() === 'POST' && empty($content))
+		if ($this->request_stack->getCurrentRequest()->getMethod() === 'POST' && empty($content))
 		{
 			$event->stopPropagation();
 		}

@@ -1,52 +1,52 @@
 nicofuma_webprofiler_profiler_home:
-    pattern: _profiler/
+    path: _profiler/
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:homeAction }
 
 nicofuma_webprofiler_profiler_search:
-    pattern: _profiler/search
+    path: _profiler/search
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:searchAction }
 
 nicofuma_webprofiler_profiler_search_bar:
-    pattern: _profiler/search_bar
+    path: _profiler/search_bar
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:searchBarAction }
 
 nicofuma_webprofiler_profiler_purge:
-    pattern: _profiler/purge
+    path: _profiler/purge
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:purgeAction }
 
 nicofuma_webprofiler_profiler_info:
-    pattern: _profiler/info/{about}
+    path: _profiler/info/{about}
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:infoAction }
 
 nicofuma_webprofiler_profiler_phpinfo:
-    pattern: _profiler/phpinfo
+    path: _profiler/phpinfo
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:phpinfoAction }
 
 nicofuma_webprofiler_profiler_search_results:
-    pattern: _profiler/{token}/search/results
+    path: _profiler/{token}/search/results
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:searchResultsAction }
 
 nicofuma_webprofiler_profiler:
-    pattern: _profiler/{token}
+    path: _profiler/{token}
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:panelAction }
 
 nicofuma_webprofiler_profiler_router:
-    pattern: _profiler/{token}/router
+    path: _profiler/{token}/router
     defaults: { _controller: nicofuma.webprofiler.controller.router:panelAction }
 
 nicofuma_webprofiler_profiler_panel:
-    pattern: _profiler/{token}/{panel}
+    path: _profiler/{token}/{panel}
     defaults: { _controller: nicofuma.webprofiler.controller.profiler:panelAction }
 
 nicofuma_webprofiler_profiler_exception:
-    pattern: _profiler/{token}/exception
+    path: _profiler/{token}/exception
     defaults: { _controller: nicofuma.webprofiler.controller.exception:showAction }
 
 nicofuma_webprofiler_profiler_exception_css:
-    pattern: _profiler/{token}/exception.css
+    path: _profiler/{token}/exception.css
     defaults: { _controller: nicofuma.webprofiler.controller.exception:cssAction }
 
 nicofuma_webprofiler_wdt:
-    pattern: _wdt/{token}
+    path: _wdt/{token}
     defaults:
         _controller: nicofuma.webprofiler.controller.profiler:toolbarAction
