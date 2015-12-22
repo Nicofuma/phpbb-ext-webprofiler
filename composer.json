@@ -15,8 +15,9 @@
 	],
 	"require": {
 		"php": ">=5.3.3",
-		"symfony/stopwatch": "2.7.*@dev",
-		"composer/installers": "~1.0"
+		"symfony/stopwatch": "~2.8.0",
+		"composer/installers": "~1.0",
+		"phpbb/phpbb": " ~3.2"
 	},
 	"require-dev": {
 		"phpbb/epv": "dev-master"
