@@ -8,6 +8,7 @@ imports:
     - { resource: data_collector/router.yml }
     - { resource: data_collector/memory.yml }
     - { resource: data_collector/database.yml }
+    - { resource: data_collector/twig.yml }
 
 parameters:
     nicofuma.webprofiler.profiler.storage.dsn: file:%core.root_path%cache/%core.environment%/profiler/

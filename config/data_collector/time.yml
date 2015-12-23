@@ -13,14 +13,13 @@ services:
             - "@nicofuma.webprofiler.dispatcher.inner"
             - "@nicofuma.webprofiler.stopwatch"
 
-    nicofuma.webprofiler.template:
-        class: nicofuma\webprofiler\phpbb\template\timed
-        decorates: template
-        public: false
-        arguments:
-            - "@nicofuma.webprofiler.template.inner"
-            - "@nicofuma.webprofiler.stopwatch"
-
+    #nicofuma.webprofiler.template:
+    #    class: nicofuma\webprofiler\phpbb\template\timed
+    #    decorates: template
+    #    public: false
+    #    arguments:
+    #        - "@nicofuma.webprofiler.template.inner"
+    #        - "@nicofuma.webprofiler.stopwatch"
 
     nicofuma.webprofiler.profiler.data_collector.time:
         class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
