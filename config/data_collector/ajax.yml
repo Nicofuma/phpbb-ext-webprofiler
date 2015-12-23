@@ -1,5 +1,9 @@
 services:
     nicofuma.webprofiler.profiler.data_collector.ajax:
-        class: nicofuma\webprofiler\data_collector\ajax
+        class: Symfony\Component\HttpKernel\DataCollector\AjaxDataCollector
         tags:
-            - { name: profiler.data_collector }
+            -
+                name: data_collector
+                template: "@WebProfiler/Collector/ajax.html.twig"
+                id: ajax
+                priority: 315

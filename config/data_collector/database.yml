@@ -2,7 +2,11 @@ services:
     nicofuma.webprofiler.profiler.data_collector.database:
         class: nicofuma\webprofiler\data_collector\database
         arguments:
-            - @dbal.conn
-            - @request
-        tags:
-            - { name: profiler.data_collector }
+            - "@dbal.conn"
+            - "@request"
+        #tags:
+        #    -
+        #        name: data_collector
+        #        template: "@WebProfiler/Collector/ajax.html.twig"
+        #        id: ajax
+        #        priority: 315

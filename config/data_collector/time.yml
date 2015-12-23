@@ -2,49 +2,37 @@ services:
     dbal.conn:
         class: nicofuma\webprofiler\phpbb\db\timed
         arguments:
-            - @service_container
-            - @nicofuma.webprofiler.stopwatch
+            - "@service_container"
+            - "@nicofuma.webprofiler.stopwatch"
 
-    dispatcher:
+    nicofuma.webprofiler.dispatcher:
         class: nicofuma\webprofiler\phpbb\event\traceable_dispatcher
+        decorates: dispatcher
+        public: false
         arguments:
-            - @nicofuma.webprofiler.dispatcher_real
-            - @nicofuma.webprofiler.stopwatch
-        calls:
-            #- [setProfiler, ["@nicofuma.webprofiler.profiler"]]
-            - [addSubscriber, ["@nicofuma.webprofiler.profiler.listener"]]
-            - [addSubscriber, ["@nicofuma.webprofiler.profiler.data_collector.request"]]
+            - "@nicofuma.webprofiler.dispatcher.inner"
+            - "@nicofuma.webprofiler.stopwatch"
 
-    nicofuma.webprofiler.dispatcher_real:
-        class: phpbb\event\dispatcher
-        arguments:
-            - @service_container
-
-    template:
+    nicofuma.webprofiler.template:
         class: nicofuma\webprofiler\phpbb\template\timed
+        decorates: template
+        public: false
         arguments:
-            - @nicofuma.webprofiler.template.real
-            - @nicofuma.webprofiler.stopwatch
+            - "@nicofuma.webprofiler.template.inner"
+            - "@nicofuma.webprofiler.stopwatch"
 
-    nicofuma.webprofiler.template.real:
-        class: phpbb\template\twig\twig
-        arguments:
-            - @path_helper
-            - @config
-            - @user
-            - @template_context
-            - @template.twig.environment
-            - %core.template.cache_path%
-            - @template.twig.extensions.collection
-            - @ext.manager
 
     nicofuma.webprofiler.profiler.data_collector.time:
         class: Symfony\Component\HttpKernel\DataCollector\TimeDataCollector
         arguments:
             - ~
-            - @nicofuma.webprofiler.stopwatch
+            - "@nicofuma.webprofiler.stopwatch"
         tags:
-            - { name: profiler.data_collector }
+            -
+                name: data_collector
+                template: "@WebProfiler/Collector/time.html.twig"
+                id: time
+                priority: 330
 
     nicofuma.webprofiler.stopwatch:
         class: Symfony\Component\Stopwatch\Stopwatch

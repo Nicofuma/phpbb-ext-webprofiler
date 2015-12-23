@@ -2,4 +2,8 @@ services:
     nicofuma.webprofiler.profiler.data_collector.config:
         class: Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector
         tags:
-            - { name: profiler.data_collector }
+            -
+                name: data_collector
+                template: "@WebProfiler/Collector/config.html.twig"
+                id: config
+                priority: -255

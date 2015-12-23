@@ -2,6 +2,10 @@ services:
     nicofuma.webprofiler.profiler.data_collector.event:
         class: Symfony\Component\HttpKernel\DataCollector\EventDataCollector
         arguments:
-            - @dispatcher
+            - "@dispatcher"
         tags:
-            - { name: profiler.data_collector }
+            -
+                name: data_collector
+                template: "@WebProfiler/Collector/events.html.twig"
+                id: events
+                priority: 290

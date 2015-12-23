@@ -72,7 +72,6 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 		}
 		catch (\Exception $e)
 		{
-
 		}
 	}
 
@@ -160,7 +159,7 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 			);
 		}
 		catch (\Exception $e)
-		{
+		{dump($e);
 		}
 	}
 
@@ -210,7 +209,7 @@ class profiler_listener extends \Symfony\Component\HttpKernel\EventListener\Prof
 	public static function getSubscribedEvents()
 	{
 		return array_merge(parent::getSubscribedEvents(), array (
-			KernelEvents::REQUEST		=> array('stop_propagation_request', 1),
+			KernelEvents::REQUEST		=> array('stop_propagation_request', 100),
 			'core.common'				=> array('on_common', 1000),
 			'core.garbage_collection'	=> array('on_garbage_collection', 1000),
 			'core.functions.redirect'	=> array('on_redirect', 0),

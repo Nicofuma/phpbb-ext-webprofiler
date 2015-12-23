@@ -1,4 +1,5 @@
 imports:
+    - { resource: services_fragment_renderer.yml }
     - { resource: data_collector/config.yml }
     - { resource: data_collector/request.yml }
     - { resource: data_collector/event.yml }
@@ -9,58 +10,79 @@ imports:
     - { resource: data_collector/database.yml }
 
 parameters:
-    nicofuma.webprofiler.profiler.storage.dsn: file:%core.root_path%cache/profiler/
+    nicofuma.webprofiler.profiler.storage.dsn: file:%core.root_path%cache/%core.environment%/profiler/
     nicofuma.webprofiler.excluded_ajax_paths: /_wdt
+    nicofuma.webprofiler.debug_toolbar.position: normal
 
 services:
     nicofuma.webprofiler.controller.profiler:
-        class: nicofuma\webprofiler\controller\profiler
+        class: Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController
         arguments:
-            - @template
-            - @controller.helper
-            - @?nicofuma.webprofiler.profiler
+            - "@router"
+            - "@?nicofuma.webprofiler.profiler"
+            - "@template.twig.environment"
+            - "%data_collector.templates%"
+            - "%nicofuma.webprofiler.debug_toolbar.position%"
 
     nicofuma.webprofiler.controller.router:
-        class: nicofuma\webprofiler\controller\router
+        class: Symfony\Bundle\WebProfilerBundle\Controller\RouterController
         arguments:
-            - @template
-            - @controller.helper
-            - @router
-            - @?nicofuma.webprofiler.profiler
+            - "@?nicofuma.webprofiler.profiler"
+            - "@template.twig.environment"
+            - "@router"
 
     nicofuma.webprofiler.event.debug_toolbar_listener:
-        class: nicofuma\webprofiler\event\debug_toolbar_listener
+        class: Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener
+        #class: nicofuma\webprofiler\event\debug_toolbar_listener
         arguments:
-            - @template
-            - @controller.helper
+            - "@template.twig.environment"
+            - "@router"
+        tags:
+            - { name: kernel.event_subscriber }
+
+    nicofuma.webprofiler.event.inject_template_paths_listener:
+        class: nicofuma\webprofiler\event\inject_template_paths_listener
+        arguments:
+            - "@template.twig.loader"
+            - "@cache.driver"
+            - "@filesystem"
+            - "%core.root_path%"
         tags:
             - { name: kernel.event_subscriber }
 
     nicofuma.webprofiler.profiler:
-        class: nicofuma\webprofiler\phpbb\profiler\profiler
+        class: Symfony\Component\HttpKernel\Profiler\Profiler
         arguments:
-            - @nicofuma.webprofiler.profiler.data_collector.collection
-            - @nicofuma.webprofiler.profiler.storage
-
-    nicofuma.webprofiler.profiler.data_collector.collection:
-        class: phpbb\di\service_collection
-        arguments:
-            - @service_container
-        tags:
-            - { name: service_collection, tag: profiler.data_collector }
+            - "@nicofuma.webprofiler.profiler.storage"
 
     nicofuma.webprofiler.profiler.listener:
         class: nicofuma\webprofiler\phpbb\profiler\profiler_listener
         arguments:
-            - @symfony_request
-            - @request_stack
-            - @dispatcher
-            - @http_kernel
-            - %core.root_path%
-            - %core.php_ext%
-            - @nicofuma.webprofiler.profiler
+            - "@symfony_request"
+            - "@request_stack"
+            - "@dispatcher"
+            - "@http_kernel"
+            - "%core.root_path%"
+            - "%core.php_ext%"
+            - "@nicofuma.webprofiler.profiler"
+        tags:
+            - { name: kernel.event_subscriber }
 
     nicofuma.webprofiler.profiler.storage:
         class: Symfony\Component\HttpKernel\Profiler\FileProfilerStorage
         arguments:
-            - %nicofuma.webprofiler.profiler.storage.dsn%
+            - "%nicofuma.webprofiler.profiler.storage.dsn%"
+
+    nicofuma.webprofiler.twig.extension.code:
+        class: Symfony\Bridge\Twig\Extension\CodeExtension
+        arguments:
+            - ""
+            - "%core.root_path%"
+            - "UTF-8"
+        tags:
+            - { name: twig.extension }
+
+    nicofuma.webprofiler.twig.extension.webprofiler:
+        class: Symfony\Bundle\WebProfilerBundle\Twig\WebProfilerExtension
+        tags:
+            - { name: twig.extension }

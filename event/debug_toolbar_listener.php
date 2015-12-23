@@ -65,7 +65,7 @@ class debug_toolbar_listener implements EventSubscriberInterface
 		{
 			$response->headers->set(
 				'X-Debug-Token-Link',
-				$this->helper->route('nicofuma_webprofiler_profiler', array('token' => $response->headers->get('X-Debug-Token')))
+				$this->helper->route('_profiler', array('token' => $response->headers->get('X-Debug-Token')))
 			);
 		}
 
@@ -126,8 +126,8 @@ class debug_toolbar_listener implements EventSubscriberInterface
 			$this->template->assign_vars(array(
 				'position' => $this->position,
 				'token' => $response->headers->get('X-Debug-Token'),
-				'profiler_link' => $this->helper->route('nicofuma_webprofiler_profiler', array('token' => $response->headers->get('X-Debug-Token'))),
-				'toolbar_link' => $this->helper->route('nicofuma_webprofiler_wdt', array('token' => $response->headers->get('X-Debug-Token'), '_referer' => $this->helper->get_current_url())),
+				'profiler_link' => $this->helper->route('_profiler', array('token' => $response->headers->get('X-Debug-Token'))),
+				'toolbar_link' => $this->helper->route('_wdt', array('token' => $response->headers->get('X-Debug-Token'), '_referer' => $this->helper->get_current_url())),
 				'excluded_ajax_paths' => $this->excludedAjaxPaths,
 			));
 

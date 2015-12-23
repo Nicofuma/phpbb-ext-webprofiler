@@ -2,5 +2,9 @@ services:
     nicofuma.webprofiler.profiler.data_collector.request:
         class: nicofuma\webprofiler\data_collector\request
         tags:
-            - { name: profiler.data_collector }
-            - { name: kernel.event_subscriber }
+            -
+                name: data_collector
+                template: "@WebProfiler/Collector/request.html.twig"
+                id: request
+                priority: 335
+            - { name: data_collector }

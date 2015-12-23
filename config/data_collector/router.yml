@@ -1,21 +1,19 @@
 services:
-    controller.resolver:
+    nicofuma.webprofiler.controller.resolver:
         class: Symfony\Component\HttpKernel\Controller\TraceableControllerResolver
-        arguments:
-            - @nicofuma.webprofiler.controller.resolver_real
-            - @nicofuma.webprofiler.stopwatch
-
-    nicofuma.webprofiler.controller.resolver_real:
-        class: phpbb\controller\resolver
-        arguments:
-            - @user
-            - @service_container
-            - %core.root_path%
-            - @template
+        decorates: controller.resolver
         public: false
+        arguments:
+            - "@nicofuma.webprofiler.controller.resolver.inner"
+            - "@nicofuma.webprofiler.stopwatch"
+
 
     nicofuma.webprofiler.profiler.data_collector.router:
         class: Symfony\Component\HttpKernel\DataCollector\RouterDataCollector
         tags:
-            - { name: profiler.data_collector }
+            -
+                name: data_collector
+                template: "@WebProfiler/Collector/router.html.twig"
+                id: router
+                priority: 285
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

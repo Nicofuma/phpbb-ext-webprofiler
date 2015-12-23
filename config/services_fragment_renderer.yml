@@ -1,0 +1,24 @@
+services:
+    nicofuma.webprofiler.fragment.handler:
+        class: Symfony\Component\HttpKernel\DependencyInjection\LazyLoadingFragmentHandler
+        arguments:
+            - "@service_container"
+            - "@request_stack"
+            - "%core.debug%"
+
+    nicofuma.webprofiler.fragment.renderer.inline:
+        class: Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer
+        arguments:
+            - "@http_kernel"
+            - "@dispatcher"
+        calls:
+            - [setFragmentPath, ["/_fragment"]]
+        tags:
+            - { name: kernel.fragment_renderer, alias: inline }
+
+    nicofuma.webprofiler.template.twig.extensions.htt_kernel:
+        class: Symfony\Bridge\Twig\Extension\HttpKernelExtension
+        arguments:
+            - '@nicofuma.webprofiler.fragment.handler'
+        tags:
+            - { name: twig.extension }
