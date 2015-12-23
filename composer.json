@@ -19,7 +19,7 @@
 		"symfony/web-profiler-bundle": "~2.8.0",
 		"symfony/framework-bundle": "~2.8.0",
 		"composer/installers": "~1.0",
-		"phpbb/phpbb": " ~3.2.0@dev"
+		"phpbb/phpbb": "~3.2.0@dev"
 	},
 	"require-dev": {
 		"phpbb/epv": "dev-master"
